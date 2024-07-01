@@ -524,9 +524,9 @@ const VendorSignUp = () => {
             Create an account to manage your hostel and PG listings effortlessly.
           </p>
         </div>
-        <div className="my-auto w-full sm:w-3/5 p-3">
+        <div className="my-auto w-full sm:w-3/5 p-3 ">
           <div className="mt-1 sm:mx-auto sm:w-full sm:max-w-sm">
-            <h1 className="text-2xl text-white font-medium text-center sm:text-start mb-20 sm:mb-0">
+            <h1 className="text-2xl text-white font-medium text-center sm:text-start mb-20 sm:mb-0 ">
               Sign Up
             </h1>
             <Formik
@@ -658,7 +658,7 @@ const VendorSignUp = () => {
                       {isSubmitting ? 'Signing up...' : 'Sign up'}
                     </button>
                   </div>
-                  <div className="flex text-sm items-center justify-center">
+                  <div className="flex text-sm items-center justify-center pb-20">
                     <h1 className="text-white text-md mx-2">Already a Vendor?</h1>
                     <Link to="/vendor/signIn">
                       <h1 className="text-md font-medium text-[#F2AA4CFF] cursor-pointer hover:text-[#8fb848]">

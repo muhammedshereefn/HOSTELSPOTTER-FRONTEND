@@ -1,13 +1,24 @@
-import  { useEffect, useState } from 'react';
+
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/admin/Sidebar';
-import {  FaEnvelope, FaBan, FaUnlock } from 'react-icons/fa';
+import { FaEnvelope, FaBan, FaUnlock } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const VendorsList = () => {
   const [vendors, setVendors] = useState([]);
   const [filter, setFilter] = useState('');
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
+  const adminToken = localStorage.getItem('adminToken');
+
+  useEffect(() => {
+    if (!adminToken) {
+      navigate('/admin/signin');
+    }
+  }, [adminToken, navigate]);
 
   useEffect(() => {
     const fetchVendors = async () => {
@@ -49,22 +60,21 @@ const VendorsList = () => {
     }
   };
 
-  // const handleDeleteVendor = async (vendorId) => {
-  //   const confirmDelete = window.confirm('Are you sure you want to delete this vendor?');
-  //   if (confirmDelete) {
-  //     try {
-  //       await axios.delete(`http://localhost:5000/api/admin/deleteVendor/${vendorId}`);
-  //       setVendors(vendors.filter(vendor => vendor._id !== vendorId));
-  //     } catch (error) {
-  //       console.log('Error deleting vendor:', error);
-  //     }
-  //   }
-  // };
+  const handleViewKYC = (vendorId) => {
+    navigate(`/admin/kyc/${vendorId}`);
+  };
+
+
+  const handleViewProperties = (vendorId)=>{
+    navigate(`/admin/vendor-properties/${vendorId}`)
+  }
 
   const filteredVendors = vendors.filter(vendor =>
     vendor.name.toLowerCase().includes(search.toLowerCase()) &&
     (filter === '' || (filter === 'Active' && !vendor.isBlocked) || (filter === 'Blocked' && vendor.isBlocked))
   );
+
+
 
   if (error) {
     return <div className="flex items-center justify-center h-screen text-red-500">{error}</div>;
@@ -104,6 +114,8 @@ const VendorsList = () => {
                 <th className="py-4 px-6 text-left">Email</th>
                 <th className="py-4 px-6 text-left">Contact</th>
                 <th className="py-4 px-6 text-left">Status</th>
+                <th className="py-4 px-6 text-left">KYC</th>
+                <th className="py-4 px-6 text-left">Properties</th>
                 <th className="py-4 px-6 text-center">Actions</th>
               </tr>
             </thead>
@@ -115,8 +127,23 @@ const VendorsList = () => {
                   <td className="py-4 px-6">{vendor.email}</td>
                   <td className="py-4 px-6">{vendor.contact}</td>
                   <td className="py-4 px-6">{vendor.isBlocked ? 'Blocked' : 'Active'}</td>
+                  <td className="py-4 px-6">
+                    <button
+                      onClick={() => handleViewKYC(vendor._id)}
+                      className="bg-blue-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
+                    >
+                      View
+                    </button>
+                  </td>
+                  <td className="py-4 px-6">
+                    <button
+                    onClick={()=>handleViewProperties(vendor._id)}
+                      className="bg-green-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
+                    >
+                      View
+                    </button>
+                  </td>
                   <td className="py-4 px-6 flex justify-center space-x-4">
-                    {/* <FaTrashAlt className="text-red-500 cursor-pointer hover:scale-125 transition-transform" onClick={() => handleDeleteVendor(vendor._id)} /> */}
                     <FaEnvelope className="text-blue-500 cursor-pointer hover:scale-125 transition-transform" />
                     {vendor.isBlocked ? (
                       <FaUnlock className="text-green-500 cursor-pointer hover:scale-125 transition-transform" onClick={() => handleUnblockVendor(vendor._id)} />

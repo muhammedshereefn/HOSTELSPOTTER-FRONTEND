@@ -2,12 +2,22 @@ import  { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/admin/Sidebar';
 import { FaTrashAlt, FaEnvelope, FaBan, FaUnlock } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const UsersList = () => {
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState('');
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
+  const adminToken = localStorage.getItem('adminToken');
+
+  useEffect(() => {
+    if (!adminToken) {
+      navigate('/admin/signin');
+    }
+  }, [adminToken, navigate]);
 
   useEffect(() => {
     const fetchUsers = async () => {

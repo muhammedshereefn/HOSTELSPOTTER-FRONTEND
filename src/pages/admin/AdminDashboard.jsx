@@ -1,9 +1,24 @@
 import { FaUserAlt, FaCube, FaMoneyBillWave, FaUsers } from 'react-icons/fa';
 import Sidebar from '../../components/admin/Sidebar';
 import 'tailwindcss/tailwind.css';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const AdminDashboard = () => {
   
+  const navigate = useNavigate()
+  const adminToken = localStorage.getItem('adminToken');
+
+  useEffect(() => {
+    if (!adminToken) {
+      navigate('/admin/signin');
+    }
+  }, [adminToken, navigate]);
+
+  if (!adminToken) {
+    return null;
+  }
+
   return (
     <div className="flex h-screen bg-white text-black">
       <Sidebar />

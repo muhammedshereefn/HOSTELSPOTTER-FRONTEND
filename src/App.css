@@ -40,3 +40,21 @@
 .read-the-docs {
   color: #888;
 } */
+/* App.css */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+input::placeholder {
+  color: #6B7280; /* Placeholder color */
+}
+
+select {
+  color: white; /* Text color inside select */
+}
+
+select option {
+  background-color: #2C3554; /* Dropdown background */
+  color: white; /* Dropdown text color */
+}

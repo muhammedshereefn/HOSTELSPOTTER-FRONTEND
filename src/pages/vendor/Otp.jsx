@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -13,13 +13,21 @@ const VendorOtp = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email;
+  const otpInputRef = useRef(null); // Create a reference for the input field
 
   useEffect(() => {
     const token = localStorage.getItem('vendorToken');
     if (token) {
-      navigate('/vendor/home');
+      navigate('/vendor/kyc');
     }
   }, [navigate]);
+
+  useEffect(() => {
+    // Set focus on the OTP input field when the component mounts
+    if (otpInputRef.current) {
+      otpInputRef.current.focus();
+    }
+  }, []);
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
@@ -27,9 +35,10 @@ const VendorOtp = () => {
         email,
         otp: values.otp,
       });
+      
       const { token } = response.data;
       localStorage.setItem('vendorToken', token);
-      navigate('/vendor/home', { replace: true });
+      navigate('/vendor/kyc', { replace: true });
     } catch (error) {
       setFieldError('otp', 'Invalid OTP');
       toast.error('Invalid OTP');
@@ -63,6 +72,7 @@ const VendorOtp = () => {
                     </label>
                     <div className="mt-2">
                       <Field
+                        innerRef={otpInputRef} // Set the reference to the Field component
                         id="otp"
                         name="otp"
                         type="text"

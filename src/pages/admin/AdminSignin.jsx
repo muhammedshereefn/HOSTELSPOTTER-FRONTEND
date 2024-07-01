@@ -1,4 +1,3 @@
-import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import axios from "axios";
@@ -34,6 +33,7 @@ const AdminSignin = () => {
       });
 
       const token = response.data.token;
+      console.log(token,'uyuggjhhjj');
       localStorage.setItem('adminToken', token);
       navigate('/admin/dashboard', { state: { message: 'Successfully logged in!' } });
     } catch (error) {

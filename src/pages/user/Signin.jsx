@@ -58,7 +58,7 @@ const Signin = () => {
         <div className="w-2/4 p-5">
           <Link to="/">
             <h5 className="text-[#ffffff] w-fit cursor-pointer md:pl-20 font-semibold text-2xl hover:text-[#8fb848]">
-              BRO<span className="text-[#BEF264]">stel</span>
+              BRO<span className="text-[#BEF264]">STEL</span>
             </h5>
           </Link>
         </div>
