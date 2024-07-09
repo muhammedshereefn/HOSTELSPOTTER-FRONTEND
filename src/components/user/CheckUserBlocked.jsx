@@ -1,7 +1,7 @@
 // src/components/CheckUserBlocked.jsx
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../api/axios';
 import toast from 'react-hot-toast';
 
 const CheckUserBlocked = ({ children }) => {
@@ -16,7 +16,7 @@ const CheckUserBlocked = ({ children }) => {
       }
 
       try {
-        const response = await axios.get('http://localhost:5000/api/users/details', {
+        const response = await axiosInstance.get('/users/details', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

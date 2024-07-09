@@ -454,7 +454,7 @@
 
 
 
-import axios from 'axios';
+import vendorAxiosInstance from '../../api/vendor/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -487,7 +487,7 @@ const VendorSignUp = () => {
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
-      await axios.post('http://localhost:5000/api/vendors/signup', values);
+      await vendorAxiosInstance.post('/vendors/signup', values);
       navigate('/vendor/otp', { state: { email: values.email }, replace: true });
     } catch (error) {
       if (error.response && error.response.status === 409) {

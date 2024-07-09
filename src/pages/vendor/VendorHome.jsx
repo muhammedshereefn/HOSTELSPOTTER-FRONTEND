@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import vendorAxiosInstance from '../../api/vendor/axios';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import premiumIcon from '/vendor/pngwing.com (3).png'; 
 
 const VendorHome = () => {
   const navigate = useNavigate();
   const [kycStatus, setKycStatus] = useState(null);
+  const [getPremium, setGetPremium] = useState(false); 
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   useEffect(() => {
@@ -17,7 +19,7 @@ const VendorHome = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:5000/api/vendors/check-block-status', {
+        const response = await vendorAxiosInstance.get('/vendors/check-block-status', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -31,6 +33,7 @@ const VendorHome = () => {
           navigate('/vendor/kyc');
         } else {
           setKycStatus(response.data.kycStatus);
+          setGetPremium(response.data.getPremium); 
         }
       } catch (error) {
         localStorage.removeItem('vendorToken');
@@ -99,36 +102,51 @@ const VendorHome = () => {
             </button>
           </div>
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8 text-white">
-            <button
-              className="hover:text-yellow-500 transition duration-300"
-              onClick={() => navigate('/guide')}
+          <div className="hidden md:flex items-center space-x-8 text-white">
+            {/* <button
+              className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300"
+              onClick={() => navigate('/vendor/chat')}
             >
-              Guide
-            </button>
+              Chat's
+            </button> */}
             <button
-              className="hover:text-yellow-500 transition duration-300"
+              className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300"
               onClick={() => navigate('/vendor/propertiesList')}
             >
               Properties
             </button>
             <button
-              className="hover:text-yellow-500 transition duration-300"
+              className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300 relative"
               onClick={() => navigate('/profile')}
             >
               Profile
+              {getPremium && (
+                <img
+                  src={premiumIcon}
+                  alt="Premium Vendor"
+                  className="h-5 w-5 absolute top-0 right-0 -mt-2 -mr-2"
+                />
+              )}
             </button>
+            {!getPremium && (
+              <button
+                className="border border-[#ff0000] bg-red-500 text-white text-sm rounded-full px-4 py-2 hover:bg-red-800 hover:text-white transition duration-300"
+                onClick={() => navigate('/vendor/subscription')}
+              >
+                SUBSCRIBE
+              </button>
+            )}
           </div>
         </div>
         {/* Mobile Menu */}
         {isMobileNavOpen && (
           <div className="md:hidden bg-gray-900">
-            <button
+            {/* <button
               className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800"
               onClick={() => navigate('/guide')}
             >
-              Guide
-            </button>
+              Chats
+            </button> */}
             <button
               className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800"
               onClick={() => navigate('/vendor/propertiesList')}
@@ -136,11 +154,26 @@ const VendorHome = () => {
               Properties
             </button>
             <button
-              className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800"
+              className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800 relative"
               onClick={() => navigate('/profile')}
             >
               Profile
+              {getPremium && (
+                <img
+                  src={premiumIcon}
+                  alt="Premium Vendor"
+                  className="h-5 w-5 absolute top-3 right-0 "
+                />
+              )}
             </button>
+            {!getPremium && ( 
+              <button
+                className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800"
+                onClick={() => navigate('/vendor/subscription')}
+              >
+                SUBSCRIBE
+              </button>
+            )}
           </div>
         )}
       </nav>
@@ -148,32 +181,38 @@ const VendorHome = () => {
       {/* Main Content */}
       {kycStatus === 'success' ? (
         <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8">
-          <div className="flex flex-col md:flex-row items-center bg-gray-800 bg-opacity-80 rounded-3xl shadow-lg overflow-hidden w-full max-w-4xl p-6">
-            <div className="w-full md:w-1/2 p-4 sm:p-8">
-              <h1 className="text-2xl sm:text-4xl font-bold mb-4 text-white">List Hostels and PGs. Grow your business</h1>
-              <p className="text-base sm:text-lg mb-6">Discover a wide range of listings and get started by selecting your preferences below.</p>
-              <button
-                className="px-4 sm:px-6 py-2 sm:py-3 bg-[#F2AA4CFF] text-black rounded-full hover:bg-yellow-600 transition duration-300"
-                onClick={() => navigate('/vendor/addProperty')}
-              >
-                ADD YOUR PROPERTIES
-              </button>
-            </div>
-            <div className="hidden md:block w-full md:w-1/2 flex justify-center items-center p-4 sm:p-8">
-              <img
-                src="/vendor/3d-rendering-isometric-house (3).jpg"
-                alt="Hostel"
-                className="rounded-s-full border-2 border-yellow-300 shadow-lg w-auto h-auto ml-44"
-              />
-            </div>
-          </div>
+         <div className="flex flex-col md:flex-row items-center bg-gray-800 bg-opacity-80 rounded-3xl shadow-lg overflow-hidden w-full max-w-4xl p-6 relative">
+  <div className="absolute  rounded-3xl pointer-events-none"></div>
+  <div className="w-full md:w-1/2 p-4 sm:p-8 relative z-10">
+    <h1 className="text-2xl sm:text-4xl font-bold mb-4 text-white">List Hostels and PGs. Grow your business</h1>
+    <p className="text-base sm:text-lg mb-6">Discover a wide range of listings and get started by selecting your preferences below.</p>
+    <button
+      className="px-4 sm:px-6 py-2 sm:py-3 bg-[#F2AA4CFF] text-black rounded-full hover:bg-yellow-600 transition duration-300"
+      onClick={() => navigate('/vendor/propertyPayment')}
+    >
+      ADD YOUR PROPERTIES
+    </button>
+  </div>
+  <div className="hidden md:flex w-full md:w-1/2 relative z-10">
+  <img
+  src="/vendor/Designer (3).png"
+  alt="Hostel"
+  className="object-cover w-full h-full rounded-e-3xl shadow-md"
+  style={{ boxShadow: '0 0 20px 10px rgba(255, 255, 255, 0.5)' }}
+/>
+
+  </div>
+</div>
+
           {/* Mobile Image */}
           <div className="md:hidden flex justify-center items-center p-4 sm:p-8">
-            <img
-              src="/vendor/3d-rendering-isometric-house (3).jpg"
-              alt="Hostel"
-              className="rounded-s-full border-2 border-yellow-300 shadow-lg w-auto h-auto"
-            />
+          <img
+  src="/vendor/Designer.png"
+  alt="Hostel"
+  className="object-cover w-full h-full rounded-e-3xl shadow-md"
+  style={{ boxShadow: '0 0 20px 10px rgba(255, 255, 255, 0.5)' }}
+/>
+
           </div>
         </div>
       ) : (

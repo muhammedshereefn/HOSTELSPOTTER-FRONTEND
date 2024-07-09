@@ -16,7 +16,11 @@ export const uploadImages = async (imagesFiles) => {
         formData.append('upload_preset', UPLOAD_PRESET);
 
         try {
-            const res = await axios.post( `https://api.cloudinary.com/v1_1/${CLOUDINARY_USER}/image/upload`, formData);
+            const res = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_USER}/image/upload`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data' 
+                }
+            });
             const imageUrl = res.data.url;
             imageUrls.push(imageUrl);
         } catch (error) {

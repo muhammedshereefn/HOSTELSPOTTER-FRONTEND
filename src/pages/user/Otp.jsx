@@ -163,7 +163,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../../api/axios'; // Axios instance
+import axiosInstance from '../../api/axios'; // Axios instance
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -176,7 +176,7 @@ const Otp = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (token) {
       navigate('/');
     }
@@ -229,7 +229,7 @@ const Otp = () => {
   const handleResendOtp = async () => {
     const email = localStorage.getItem('email'); 
     try {
-      const response = await axios.post('http://localhost:5000/api/users/resend-otp', { email });
+      const response = await axiosInstance.post('/users/resend-otp', { email });
       console.log(response.data);
       setInputs(Array(6).fill('')); // Clear the input fields
       setTimer(60); // Reset the timer
@@ -246,7 +246,7 @@ const Otp = () => {
   const handleOtpVerification = async () => {
     const otp = inputs.join('');
     try {
-      const response = await axios.post('http://localhost:5000/api/users/verify-otp', {
+      const response = await axiosInstance.post('/users/verify-otp', {
         email: localStorage.getItem('email'),
         otp
       });

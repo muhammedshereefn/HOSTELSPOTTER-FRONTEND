@@ -1,9 +1,11 @@
-import axios from "axios";
+// import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useEffect } from "react";
 import toast, { Toaster } from 'react-hot-toast';
+import axiosInstance from "../../api/axios";
+
 
 const SigninSchema = Yup.object().shape({
   email: Yup.string()
@@ -16,7 +18,7 @@ const Signin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (token) {
       navigate('/home');
     }
@@ -24,10 +26,11 @@ const Signin = () => {
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/users/signin', values);
-      const { token } = response.data;
+      const response = await axiosInstance.post('/users/signin', values);
+      const { accessToken, refreshToken } = response.data;
 
-      localStorage.setItem('token', token);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
       navigate('/home', { state: { message: 'Successfully logged in!' } });
     } catch (error) {
       if (error.response) {
@@ -40,7 +43,7 @@ const Signin = () => {
           toast.error('Invalid email or password');
         } else {
           setFieldError('email', 'Unknown error occurred. Please try again.');
-          toast.error('Unknown error occurred. Please try again.');
+          toast.error('Incorrect email or password.');
         }
       } else {
         setFieldError('email', 'Unknown error occurred. Please try again.');

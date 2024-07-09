@@ -24,6 +24,10 @@ import PropertyList from './pages/vendor/PropertyList';
 import VendorProperties from './pages/admin/VendorProperties';
 import PropertyDetailsPage from './pages/user/PropertyDetailsPage';
 import EditProperty from './pages/vendor/EditProperty';
+import SubscriptionLanding from './pages/vendor/SubscriptionLanding';
+import VendorChatPage from './pages/vendor/VendorChat';
+import PayBeforePropertyCreation from './pages/vendor/PayBeforePropertyCreation';
+import ProfilePage from './pages/user/ProfilePage';
 
 
 
@@ -39,6 +43,8 @@ const App = () => {
         <Route path="/signUp" element={<Signup />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/propertyDetails/:id" element={<PropertyDetailsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+
 
 
         {/* VENDOR */}
@@ -50,7 +56,10 @@ const App = () => {
         <Route path='/vendor/addProperty' element={<PropertyListingForm/>}/>
         <Route path='/vendor/propertiesList' element={<PropertyList/>}/>
         <Route path="/property/edit/:id" element={<EditProperty />} />
-       
+        <Route path="/vendor/subscription" element={<SubscriptionLanding />} />
+        <Route path='/vendor/chat' element={<VendorChatPage/>}/>
+        <Route path='/vendor/propertyPayment' element={<PayBeforePropertyCreation/>}/>
+
 
 
         {/* ADMIN */}

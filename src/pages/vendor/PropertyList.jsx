@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import vendorAxiosInstance from '../../api/vendor/axios';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { FaEdit, FaTrash } from 'react-icons/fa';
@@ -27,7 +27,7 @@ const PropertyList = () => {
 
     const fetchProperties = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/vendors/propertiesList', {
+        const response = await vendorAxiosInstance.get('/vendors/propertiesList', {
           headers: {
             Authorization: `Bearer ${vendorToken}`,
           },
@@ -58,7 +58,7 @@ const PropertyList = () => {
 
   const confirmDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/vendors/property/${propertyToDelete}`, {
+      const response = await vendorAxiosInstance.delete(`/vendors/property/${propertyToDelete}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('vendorToken')}`,
         },
@@ -106,6 +106,12 @@ const PropertyList = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center p-4">
+       <button
+          className="mt-8 py-2 px-4 mb-3  bg-[#F2AA4CFF] hover:bg-[#45a049] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
+          onClick={() => navigate('/vendor/home')}
+        >
+          Back to Home
+        </button>
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex flex-col items-center justify-center w-full max-w-6xl p-8 bg-gray-800 shadow-lg rounded-3xl">
         <h2 className="text-3xl font-semibold text-white mb-6">
@@ -138,7 +144,7 @@ const PropertyList = () => {
                     </div>
                   )}
                 </Slider>
-                <h3 className="text-xl font-semibold text-white mb-2">{property.hostelName}</h3>
+                <h3 className="text-xl font-semibold text-white mt-8">{property.hostelName}</h3>
                 <p className="text-white"><strong>Location:</strong> {property.hostelLocation}</p>
                 <p className="text-white"><strong>Owner:</strong> {property.ownerName}</p>
                 <p className="text-white"><strong>Contact:</strong> {property.ownerContact}</p>
@@ -168,6 +174,7 @@ const PropertyList = () => {
             ))
           )}
         </div>
+       
       </div>
       {selectedProperty && (
         <Modal

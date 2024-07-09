@@ -1,5 +1,5 @@
 // src/pages/vendor/SignIn.jsx
-import axios from 'axios';
+import vendorAxiosInstance from '../../api/vendor/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -25,10 +25,11 @@ const VendorSignIn = () => {
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/vendors/signin', values);
-      const { token } = response.data;
+      const response = await vendorAxiosInstance.post('/vendors/signin', values);
+      const { accessToken, refreshToken } = response.data;
 
-      localStorage.setItem('vendorToken', token);
+      localStorage.setItem('vendorToken', accessToken);
+      localStorage.setItem('vendorRefreshToken', refreshToken);
       navigate('/vendor/home', { state: { message: 'Successfully logged in!' } });
     } catch (error) {
       if (error.response) {

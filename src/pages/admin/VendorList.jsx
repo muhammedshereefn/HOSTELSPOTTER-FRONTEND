@@ -1,9 +1,9 @@
-
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/admin/Sidebar';
 import { FaEnvelope, FaBan, FaUnlock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import PremiumBadge from '/vendor/pngwing.com (3).png'; // Adjust the path to your badge image
 
 const VendorsList = () => {
   const [vendors, setVendors] = useState([]);
@@ -64,17 +64,14 @@ const VendorsList = () => {
     navigate(`/admin/kyc/${vendorId}`);
   };
 
-
-  const handleViewProperties = (vendorId)=>{
-    navigate(`/admin/vendor-properties/${vendorId}`)
-  }
+  const handleViewProperties = (vendorId) => {
+    navigate(`/admin/vendor-properties/${vendorId}`);
+  };
 
   const filteredVendors = vendors.filter(vendor =>
     vendor.name.toLowerCase().includes(search.toLowerCase()) &&
-    (filter === '' || (filter === 'Active' && !vendor.isBlocked) || (filter === 'Blocked' && vendor.isBlocked))
+    (filter === '' || (filter === 'Active' && !vendor.isBlocked) || (filter === 'Blocked' && vendor.isBlocked) || (filter === 'Premium' && vendor.getPremium))
   );
-
-
 
   if (error) {
     return <div className="flex items-center justify-center h-screen text-red-500">{error}</div>;
@@ -95,6 +92,7 @@ const VendorsList = () => {
               <option value="">Filter By</option>
               <option value="Active">Active</option>
               <option value="Blocked">Blocked</option>
+              <option value="Premium">Premium</option>
             </select>
           </div>
           <input
@@ -123,7 +121,16 @@ const VendorsList = () => {
               {filteredVendors.map((vendor, index) => (
                 <tr key={vendor._id} className="border-b border-gray-400 hover:bg-gray-200 transition duration-200">
                   <td className="py-4 px-6">{index + 1}</td>
-                  <td className="py-4 px-6">{vendor.name}</td>
+                  <td className="py-4 px-6 relative">
+                    {vendor.name}
+                    {vendor.getPremium && (
+                      <img
+                        src={PremiumBadge}
+                        alt="Premium Badge"
+                        className="absolute top-3 right-0 w-5 h-5"
+                      />
+                    )}
+                  </td>
                   <td className="py-4 px-6">{vendor.email}</td>
                   <td className="py-4 px-6">{vendor.contact}</td>
                   <td className="py-4 px-6">{vendor.isBlocked ? 'Blocked' : 'Active'}</td>
@@ -137,8 +144,8 @@ const VendorsList = () => {
                   </td>
                   <td className="py-4 px-6">
                     <button
-                    onClick={()=>handleViewProperties(vendor._id)}
-                      className="bg-green-500 text-white py-1 px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
+                      onClick={() => handleViewProperties(vendor._id)}
+                      className="bg-green-500 text-white py-1 px-4 rounded-lg hover:bg-green-600 focus:outline-none"
                     >
                       View
                     </button>

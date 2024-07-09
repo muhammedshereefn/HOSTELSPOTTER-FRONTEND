@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import axios from 'axios';
+import { useEffect, useRef } from 'react';
+import vendorAxiosInstance from '../../api/vendor/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -13,7 +13,7 @@ const VendorOtp = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email;
-  const otpInputRef = useRef(null); // Create a reference for the input field
+  const otpInputRef = useRef(null); 
 
   useEffect(() => {
     const token = localStorage.getItem('vendorToken');
@@ -31,14 +31,14 @@ const VendorOtp = () => {
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/vendors/verify-otp', {
+      const response = await vendorAxiosInstance.post('/vendors/verify-otp', {
         email,
         otp: values.otp,
       });
       
-      const { token } = response.data;
-      localStorage.setItem('vendorToken', token);
-      navigate('/vendor/kyc', { replace: true });
+      const { accessToken, refreshToken } = response.data;
+      localStorage.setItem('vendorToken', accessToken);
+      localStorage.setItem('vendorRefreshToken', refreshToken);      navigate('/vendor/kyc', { replace: true });
     } catch (error) {
       setFieldError('otp', 'Invalid OTP');
       toast.error('Invalid OTP');

@@ -123,7 +123,7 @@ const Sidebar = () => {
     <aside className="w-64 h-full bg-gradient-to-b from-[#4e54c8] to-[#8f94fb] shadow-lg shadow-[#000000aa]">
       <div className="p-8">
         <h1 className="text-4xl font-extrabold text-center mb-14 text-white drop-shadow-lg">
-          BRO<span className="text-[#FFD700]">stel</span>
+          BRO<span className="text-[#FFD700]">STEL</span>
         </h1>
         <nav>
           <ul>

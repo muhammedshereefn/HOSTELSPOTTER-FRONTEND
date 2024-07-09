@@ -1,6 +1,6 @@
 import  { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import vendorAxiosInstance from '../../api/vendor/axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { uploadImages } from '../../api/cloudinaryConfig'; 
 const EditProperty = () => {
@@ -28,7 +28,7 @@ const EditProperty = () => {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/vendors/property/${id}`, {
+        const response = await vendorAxiosInstance.get(`/vendors/property/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('vendorToken')}`,
           },
@@ -92,7 +92,7 @@ const EditProperty = () => {
     }
 
     try {
-      const response = await axios.put(`http://localhost:5000/api/vendors/property/${id}`, formData, {
+      const response = await vendorAxiosInstance.put(`/vendors/property/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('vendorToken')}`,
         },

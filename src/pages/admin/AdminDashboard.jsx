@@ -24,7 +24,7 @@ const AdminDashboard = () => {
       <Sidebar />
       <main className="flex-1 p-8">
         <header className="flex justify-between items-center mb-6">
-          <h2 className="text-4xl font-extrabold drop-shadow-lg">Dashboard</h2>
+          <h2 className="text-2xl font-extrabold drop-shadow-lg">DASHBOARD</h2>
           <div className="flex items-center">
             <div className="mr-4">
               <span className="flag-icon flag-icon-in"></span>

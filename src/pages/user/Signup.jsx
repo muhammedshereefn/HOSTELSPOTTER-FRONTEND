@@ -24,9 +24,9 @@ const Signup = () => {
   const { loading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     if (token) {
-      navigate('/');
+      navigate('/home');
     }
   }, [navigate]);
 

@@ -135,7 +135,7 @@
 
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import vendorAxiosInstance from '../../api/vendor/axios';
 import toast, { Toaster } from 'react-hot-toast';
 
 const VendorKycUpload = () => {
@@ -153,7 +153,7 @@ const VendorKycUpload = () => {
         setVendorId(decodedToken.vendorId);
 
         // Fetch vendor KYC status
-        axios.get(`http://localhost:5000/api/vendors/${decodedToken.vendorId}`)
+        vendorAxiosInstance.get(`/vendors/${decodedToken.vendorId}`)
           .then(response => {
             if (response.data.kycImage) {
               navigate('/vendor/home'); 
@@ -206,7 +206,7 @@ const VendorKycUpload = () => {
     formData.append('vendorId', vendorId);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/vendors/upload-kyc', formData, {
+      const response = await vendorAxiosInstance.post('/vendors/upload-kyc', formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('vendorToken')}`,
           'Content-Type': 'multipart/form-data',
