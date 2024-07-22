@@ -1,9 +1,41 @@
 // pages/PayBeforePropertyCreation.js
 import { useNavigate } from 'react-router-dom';
 import PayButton from '../../components/vendor/PayButton';
+import { io } from 'socket.io-client';
+import CustomAlert from '../../components/vendor/CustomAlert';
+import { useEffect, useState } from 'react';
+
+
 
 const PayBeforePropertyCreation = () => {
   const navigate = useNavigate();
+  const [alert, setAlert] = useState({ message: '', type: '', visible: false });
+
+
+  useEffect(()=>{
+    
+    const socket = io('http://localhost:5000');
+
+    socket.on('newBooking', ({ userName, bedQuantity, hostelName }) => {
+      setAlert({
+        message: `New Booking! ${userName} booked ${bedQuantity} beds in ${hostelName}`,
+        type: 'success',
+        visible: true,
+      });   
+        });
+
+    socket.on('bookingCancelled', ({ userName, bedQuantity, hostelName }) => {
+      setAlert({
+        message: `Booking Cancelled! ${userName} cancelled ${bedQuantity} beds in ${hostelName}`,
+        type: 'error',
+        visible: true,
+      });
+ });
+
+    return () => {
+      socket.disconnect();
+    };
+  },[])
   const paymentInfo = `
     Start listing your property with us for just 49 INR! 
 
@@ -17,6 +49,13 @@ const PayBeforePropertyCreation = () => {
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center relative">
+            {alert.visible && (
+        <CustomAlert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert({ ...alert, visible: false })}
+        />
+      )}
       {/* Yellowish blend light effect */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-500 to-transparent opacity-20 blur-lg pointer-events-none"></div>
       

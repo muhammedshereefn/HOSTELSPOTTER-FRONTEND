@@ -1,5 +1,6 @@
 
 // src/App.jsx
+//
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Home from './pages/user/Home';
 import Signin from './pages/user/Signin';
@@ -28,6 +29,12 @@ import SubscriptionLanding from './pages/vendor/SubscriptionLanding';
 import VendorChatPage from './pages/vendor/VendorChat';
 import PayBeforePropertyCreation from './pages/vendor/PayBeforePropertyCreation';
 import ProfilePage from './pages/user/ProfilePage';
+import SlotBooking from './pages/user/SlotBooking';
+import BookingHistoryPage from './pages/user/BookingHistoryPage';
+import BookingList from './pages/vendor/BookingList';
+import UserBookingHistory from './pages/admin/UserBookingHistory';
+import VendorProfile from './pages/vendor/VendorProfile';
+import PropertiesByState from './pages/user/PropertiesByState';
 
 
 
@@ -43,7 +50,11 @@ const App = () => {
         <Route path="/signUp" element={<Signup />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/propertyDetails/:id" element={<PropertyDetailsPage />} />
+        <Route path="/slot-booking/:propertyId/:roomType/:bedQuantity" element={<SlotBooking />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/bookingHistory" element={<BookingHistoryPage />} />
+        <Route path="/properties/:state" element={<PropertiesByState />} />
+
 
 
 
@@ -59,6 +70,8 @@ const App = () => {
         <Route path="/vendor/subscription" element={<SubscriptionLanding />} />
         <Route path='/vendor/chat' element={<VendorChatPage/>}/>
         <Route path='/vendor/propertyPayment' element={<PayBeforePropertyCreation/>}/>
+        <Route path='/property/:hostelName/bookings' element={<BookingList />} />
+        <Route path="/vendor/profile" element={<VendorProfile />} />
 
 
 
@@ -69,7 +82,8 @@ const App = () => {
         <Route path='/admin/vendorlist' element={<VendorsList/>}/>
         <Route path='/admin/kyc/:vendorId' element={<VendorKYCApproval/>}/>
         <Route path='/admin/vendor-properties/:vendorId' element={<VendorProperties/>}/>
-        
+        <Route path="/admin/user/:userId/booking-history" element={<UserBookingHistory />} />
+
 
 
       </Routes>

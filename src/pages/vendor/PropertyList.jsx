@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import vendorAxiosInstance from '../../api/vendor/axios';
 import { useNavigate } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import Modal from 'react-modal';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import ConfirmModal from '../../components/vendor/ConfirmModal';
+import { io } from 'socket.io-client';
+import 'react-toastify/dist/ReactToastify.css';
+import CustomAlert from '../../components/vendor/CustomAlert';
 
 const PropertyList = () => {
   const [properties, setProperties] = useState([]);
@@ -15,6 +18,8 @@ const PropertyList = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false); 
   const [propertyToDelete, setPropertyToDelete] = useState(null); 
+  const [alert, setAlert] = useState({ message: '', type: '', visible: false });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,6 +50,29 @@ const PropertyList = () => {
     };
 
     fetchProperties();
+
+    const socket = io('http://localhost:5000');
+
+    socket.on('newBooking', ({ userName, bedQuantity, hostelName }) => {
+      setAlert({
+        message: `New Booking! ${userName} booked ${bedQuantity} beds in ${hostelName}`,
+        type: 'success',
+        visible: true,
+      });   
+            fetchProperties();
+    });
+
+    socket.on('bookingCancelled', ({ userName, bedQuantity, hostelName }) => {
+      setAlert({
+        message: `Booking Cancelled! ${userName} cancelled ${bedQuantity} beds in ${hostelName}`,
+        type: 'error',
+        visible: true,
+      });      fetchProperties();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, [navigate]);
 
   const handleEdit = (id) => {
@@ -94,6 +122,10 @@ const PropertyList = () => {
     setPropertyToDelete(null);
   };
 
+  const handleViewBookings = (hostelName) => {
+    navigate(`/property/${hostelName}/bookings`);
+  };
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -107,13 +139,21 @@ const PropertyList = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center p-4">
        <button
-          className="mt-8 py-2 px-4 mb-3  bg-[#F2AA4CFF] hover:bg-[#45a049] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
+          className="mt-8 py-2 px-4 mb-3  bg-[#F2AA4CFF]  text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
           onClick={() => navigate('/vendor/home')}
         >
           Back to Home
         </button>
-      <Toaster position="top-center" reverseOrder={false} />
-      <div className="flex flex-col items-center justify-center w-full max-w-6xl p-8 bg-gray-800 shadow-lg rounded-3xl">
+        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />   
+        {alert.visible && (
+        <CustomAlert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert({ ...alert, visible: false })}
+        />
+      )}   
+        <div className="flex flex-col items-center justify-center w-full max-w-6xl p-8 bg-gray-800 shadow-lg rounded-3xl">
+
         <h2 className="text-3xl font-semibold text-white mb-6">
           Your <span className="text-[#F2AA4CFF]">Properties</span>
         </h2>
@@ -151,10 +191,16 @@ const PropertyList = () => {
                 <p className="text-white"><strong>Rent:</strong> {property.rent}</p>
                 <p className="text-white"><strong>Deposit:</strong> {property.deposite}</p>
                 <button
-                  className="mt-4 py-2 px-4 bg-[#F2AA4CFF] hover:bg-[#e39a3b] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
+                  className="mt-4 mr-5 py-2 px-4 bg-[#F2AA4CFF] hover:bg-[#e39a3b] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
                   onClick={() => handleViewDetails(property)}
                 >
                   View Details
+                </button>
+                <button
+                  className="mt-2 py-2 px-4 bg-[#F2AA4CFF] hover:bg-[#f2aa4cbc] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
+                  onClick={() => handleViewBookings(property.hostelName)}
+                >
+                  View Bookings
                 </button>
                 <div className="flex justify-end mt-4 space-x-4">
                   <button
@@ -177,36 +223,59 @@ const PropertyList = () => {
        
       </div>
       {selectedProperty && (
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          contentLabel="Property Details"
-          className="flex items-center justify-center min-h-screen"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-75"
-        >
-          <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-white max-w-lg w-full relative">
-            <h2 className="text-2xl font-bold mb-4">{selectedProperty.hostelName}</h2>
-            <p><strong>Location:</strong> {selectedProperty.hostelLocation}</p>
-            <p><strong>Owner:</strong> {selectedProperty.ownerName}</p>
-            <p><strong>Email:</strong> {selectedProperty.ownerEmail}</p>
-            <p><strong>Contact:</strong> {selectedProperty.ownerContact}</p>
-            <p><strong>Rent:</strong> {selectedProperty.rent}</p>
-            <p><strong>Deposit:</strong> {selectedProperty.deposite}</p>
-            <p><strong>Target:</strong> {selectedProperty.target.join(', ')}</p>
-            <p><strong>Policies:</strong> {selectedProperty.policies.join(', ')}</p>
-            <p><strong>Facilities:</strong> {selectedProperty.facilities.join(', ')}</p>
-            <p><strong>Category:</strong> {selectedProperty.category}</p>
-            <p><strong>Available Plans:</strong> {selectedProperty.availablePlans.join(', ')}</p>
-            <p><strong>Nearby Access:</strong> {selectedProperty.nearbyAccess.join(', ')}</p>
-            <p><strong>Room Quantity:</strong> {selectedProperty.roomQuantity}</p>
-            <button
-              onClick={closeModal}
-              className="absolute top-2 right-2 bg-red-600 text-white hover:bg-red-700 font-bold py-2 px-4 rounded transition duration-300"
-            >
-              Close
-            </button>
-          </div>
-        </Modal>
+    <Modal
+    isOpen={modalIsOpen}
+    onRequestClose={closeModal}
+    contentLabel="Property Details"
+    className="flex items-center justify-center min-h-screen"
+    overlayClassName="fixed inset-0 bg-black bg-opacity-75"
+  >
+    <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-white max-w-lg w-full relative overflow-auto max-h-screen">
+      <h2 className="text-2xl font-bold mb-4">{selectedProperty.hostelName}</h2>
+      <p><strong>Location:</strong> {selectedProperty.hostelLocation}</p>
+      <p><strong>State:</strong> {selectedProperty.state}</p>
+      <p><strong>District:</strong> {selectedProperty.district}</p>
+      <p><strong>City:</strong> {selectedProperty.city}</p>
+      <p><strong>Owner:</strong> {selectedProperty.ownerName}</p>
+      <p><strong>Email:</strong> {selectedProperty.ownerEmail}</p>
+      <p><strong>Contact:</strong> {selectedProperty.ownerContact}</p>
+      <p><strong>Rent:</strong> {selectedProperty.rent}</p>
+      <p><strong>Deposit:</strong> {selectedProperty.deposite}</p>
+      <p><strong>Target:</strong> {selectedProperty.target.join(', ')}</p>
+      <p><strong>Policies:</strong> {selectedProperty.policies.join(', ')}</p>
+      <p><strong>Facilities:</strong> {selectedProperty.facilities.join(', ')}</p>
+      <p><strong>Category:</strong> {selectedProperty.category}</p>
+      <p><strong>Available Plans:</strong> {selectedProperty.availablePlans.join(', ')}</p>
+      <p><strong>Nearby Access:</strong> {selectedProperty.nearbyAccess.join(', ')}</p>
+      <p><strong>Room Quantity:</strong> {selectedProperty.roomQuantity}</p>
+      <div>
+        <strong>Room Bed Quantities:</strong>
+        <ul className="list-disc list-inside">
+          {selectedProperty.roomBedQuantities.map((room, index) => (
+            <li key={index}>
+              {room.roomName}: {room.bedQuantity} beds
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="mt-4">
+        <strong>Hostel Images:</strong>
+        <div className="flex space-x-2">
+          {selectedProperty.hostelImages.map((image, index) => (
+            <img key={index} src={image} alt={`Hostel Image ${index + 1}`} className="w-20 h-20 rounded-lg object-cover" />
+          ))}
+        </div>
+      </div>
+      <p className="mt-4"><strong>Longitude:</strong> {selectedProperty.longitude}</p>
+      <p><strong>Latitude:</strong> {selectedProperty.latitude}</p>
+      <button
+        onClick={closeModal}
+        className="absolute top-2 right-2 bg-red-600 text-white hover:bg-red-700 font-bold py-2 px-4 rounded transition duration-300"
+      >
+        Close
+      </button>
+    </div>
+  </Modal>
       )}
       <ConfirmModal
         isOpen={deleteModalOpen}

@@ -75,7 +75,7 @@ const VendorProperties = () => {
   return (
     <div className="flex h-screen bg-white text-black">
       <Sidebar />
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-8 overflow-y-auto">
         <h1 className="text-2xl font-extrabold mb-6 text-black drop-shadow-lg">Vendor Properties</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {properties.length === 0 ? (
@@ -109,14 +109,6 @@ const VendorProperties = () => {
                 <p><strong>Owner:</strong> {property.ownerName}</p>
                 <p><strong>Rent:</strong> {property.rent}</p>
                 <p><strong>Deposit:</strong> {property.deposite}</p>
-                <div className="flex justify-end mt-4 space-x-4">
-                  <button className="text-blue-600 hover:text-blue-800" onClick={() => handleEdit(property._id)}>
-                    <FaEdit size={20} />
-                  </button>
-                  <button className="text-red-600 hover:text-red-800" onClick={() => handleDelete(property._id)}>
-                    <FaTrash size={20} />
-                  </button>
-                </div>
                 <button
                   className="absolute bottom-4 right-4 bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-900 focus:outline-none"
                   onClick={() => handleViewDetails(property)}
@@ -129,36 +121,59 @@ const VendorProperties = () => {
         </div>
       </main>
       {selectedProperty && (
-        <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        contentLabel="Property Details"
-        className="flex items-center justify-center min-h-screen"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-75"
-      >
-        <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-white max-w-lg w-full relative">
-          <h2 className="text-2xl font-bold mb-4">{selectedProperty.hostelName}</h2>
-          <p><strong>Location:</strong> {selectedProperty.hostelLocation}</p>
-          <p><strong>Owner:</strong> {selectedProperty.ownerName}</p>
-          <p><strong>Email:</strong> {selectedProperty.ownerEmail}</p>
-          <p><strong>Contact:</strong> {selectedProperty.ownerContact}</p>
-          <p><strong>Rent:</strong> {selectedProperty.rent}</p>
-          <p><strong>Deposit:</strong> {selectedProperty.deposite}</p>
-          <p><strong>Target:</strong> {selectedProperty.target.join(', ')}</p>
-          <p><strong>Policies:</strong> {selectedProperty.policies.join(', ')}</p>
-          <p><strong>Facilities:</strong> {selectedProperty.facilities.join(', ')}</p>
-          <p><strong>Category:</strong> {selectedProperty.category}</p>
-          <p><strong>Available Plans:</strong> {selectedProperty.availablePlans.join(', ')}</p>
-          <p><strong>Nearby Access:</strong> {selectedProperty.nearbyAccess.join(', ')}</p>
-          <p><strong>Room Quantity:</strong> {selectedProperty.roomQuantity}</p>
-          <button
-            onClick={closeModal}
-            className="absolute top-2 right-2 bg-red-600 text-white hover:bg-red-700 font-bold py-2 px-4 rounded transition duration-300"
-          >
-            Close
-          </button>
+    <Modal
+    isOpen={modalIsOpen}
+    onRequestClose={closeModal}
+    contentLabel="Property Details"
+    className="flex items-center justify-center min-h-screen"
+    overlayClassName="fixed inset-0 bg-black bg-opacity-75"
+  >
+    <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-white max-w-lg w-full relative overflow-auto max-h-screen">
+      <h2 className="text-2xl font-bold mb-4">{selectedProperty.hostelName}</h2>
+      <p><strong>Location:</strong> {selectedProperty.hostelLocation}</p>
+      <p><strong>State:</strong> {selectedProperty.state}</p>
+      <p><strong>District:</strong> {selectedProperty.district}</p>
+      <p><strong>City:</strong> {selectedProperty.city}</p>
+      <p><strong>Owner:</strong> {selectedProperty.ownerName}</p>
+      <p><strong>Email:</strong> {selectedProperty.ownerEmail}</p>
+      <p><strong>Contact:</strong> {selectedProperty.ownerContact}</p>
+      <p><strong>Rent:</strong> {selectedProperty.rent}</p>
+      <p><strong>Deposit:</strong> {selectedProperty.deposite}</p>
+      <p><strong>Target:</strong> {selectedProperty.target.join(', ')}</p>
+      <p><strong>Policies:</strong> {selectedProperty.policies.join(', ')}</p>
+      <p><strong>Facilities:</strong> {selectedProperty.facilities.join(', ')}</p>
+      <p><strong>Category:</strong> {selectedProperty.category}</p>
+      <p><strong>Available Plans:</strong> {selectedProperty.availablePlans.join(', ')}</p>
+      <p><strong>Nearby Access:</strong> {selectedProperty.nearbyAccess.join(', ')}</p>
+      <p><strong>Room Quantity:</strong> {selectedProperty.roomQuantity}</p>
+      <div>
+        <strong>Room Bed Quantities:</strong>
+        <ul className="list-disc list-inside">
+          {selectedProperty.roomBedQuantities.map((room, index) => (
+            <li key={index}>
+              {room.roomName}: {room.bedQuantity} beds
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="mt-4">
+        <strong>Hostel Images:</strong>
+        <div className="flex space-x-2">
+          {selectedProperty.hostelImages.map((image, index) => (
+            <img key={index} src={image} alt={`Hostel Image ${index + 1}`} className="w-20 h-20 rounded-lg object-cover" />
+          ))}
         </div>
-      </Modal>
+      </div>
+      <p className="mt-4"><strong>Longitude:</strong> {selectedProperty.longitude}</p>
+      <p><strong>Latitude:</strong> {selectedProperty.latitude}</p>
+      <button
+        onClick={closeModal}
+        className="absolute top-2 right-2 bg-red-600 text-white hover:bg-red-700 font-bold py-2 px-4 rounded transition duration-300"
+      >
+        Close
+      </button>
+    </div>
+  </Modal>
       )}
     </div>
   );

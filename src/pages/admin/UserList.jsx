@@ -71,6 +71,10 @@ const UsersList = () => {
     }
   };
 
+  const viewBookingHistory = (userId) => {
+    navigate(`/admin/user/${userId}/booking-history`);
+  };
+
   const filteredUsers = users.filter(user =>
     user.name.toLowerCase().includes(search.toLowerCase()) &&
     (filter === '' || (filter === 'Active' && !user.isBlocked) || (filter === 'Blocked' && user.isBlocked))
@@ -133,6 +137,12 @@ const UsersList = () => {
                     ) : (
                       <FaBan className="text-yellow-500 cursor-pointer hover:scale-125 transition-transform" onClick={() => handleBlockUser(user._id)} />
                     )}
+                     <button
+                      className="text-sm text-black hover:underline bg-[#00000025] rounded-lg"
+                      onClick={() => viewBookingHistory(user._id)}
+                    >
+                      View Booking History
+                    </button>
                   </td>
                 </tr>
               ))}

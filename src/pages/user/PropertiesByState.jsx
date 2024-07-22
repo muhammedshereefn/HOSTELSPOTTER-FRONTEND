@@ -1,0 +1,201 @@
+import { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import axiosInstance from '../../api/axios';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { FaHistory, FaRegUserCircle } from 'react-icons/fa';
+import ReactPaginate from 'react-paginate';
+
+const PropertiesByState = () => {
+  const { state } = useParams();
+  const [properties, setProperties] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [minRent, setMinRent] = useState('');
+  const [maxRent, setMaxRent] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const propertiesPerPage = 16;
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await axiosInstance.get(`/users/properties/by-state/${state}`);
+        setProperties(response.data);
+        setFilteredProperties(response.data);
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      }
+    };
+
+    fetchProperties();
+  }, [state]);
+
+  useEffect(() => {
+    let filtered = properties;
+
+    if (selectedCategory !== 'All') {
+      filtered = filtered.filter(property => property.category === selectedCategory);
+    }
+
+    if (minRent !== '' && maxRent !== '') {
+      filtered = filtered.filter(property => property.rent >= minRent && property.rent <= maxRent);
+    }
+
+    if (searchTerm !== '') {
+      filtered = filtered.filter(property =>
+        property.hostelName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        property.city.toLowerCase().includes(searchTerm.toLowerCase()) 
+      );
+    }
+
+    setFilteredProperties(filtered);
+  }, [selectedCategory, minRent, maxRent, searchTerm, properties]);
+
+  const handleCategoryFilter = (category) => {
+    setSelectedCategory(category);
+  };
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const offset = currentPage * propertiesPerPage;
+  const currentProperties = filteredProperties.slice(offset, offset + propertiesPerPage);
+
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1
+  };
+
+  return (
+    <div className="min-h-screen text-white flex flex-col items-center bg-[#1E2530]">
+      <header className="w-full p-4 flex justify-between items-center shadow-md bg-gray-800">
+        <h1 className="text-2xl font-bold text-[#BEF264]"><span className='text-white'>BRO</span>STEL</h1>
+        <div className="flex items-center space-x-4">
+          <Link to="/bookingHistory">
+            <button className="p-2 bg-[#BEF264] text-[#1B213B] rounded-full">
+              <FaHistory className="text-xl" />
+            </button>
+          </Link>
+          <Link to="/profile">
+            <button className="p-2 bg-[#BEF264] text-[#1B213B] rounded-full">
+              <FaRegUserCircle className="text-xl" />
+            </button>
+          </Link>
+        </div>
+      </header>
+      <section className="w-full px-8 py-12 flex flex-col items-center">
+        <h2 className="pb-10 text-3xl font-bold uppercase text-[#BEF264] mb-11 text-center">
+          <span className='text-white'>Available Properties</span> {state}
+        </h2>
+
+        {/* Filters Section */}
+        <div className="w-full max-w-6xl mb-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
+            {/* Category Filter Buttons */}
+            <div className="flex flex-wrap justify-center space-x-2 space-y-2 md:space-y-0">
+              {['All', 'Gents', 'Ladies', 'Mixed'].map(category => (
+                <button
+                  key={category}
+                  className={`px-4 py-2 rounded-lg font-bold ${selectedCategory === category ? 'bg-[#BEF264] text-[#1B213B]' : 'bg-[#2C3554] text-white'}`}
+                  onClick={() => handleCategoryFilter(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
+            {/* Rent Price Range Filter */}
+            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 justify-center">
+              <input
+                type="text"
+                placeholder="₹ Min Rent"
+                value={minRent}
+                onChange={(e) => setMinRent(e.target.value)}
+                className="px-4 py-2 rounded-lg bg-[#2C3554] text-white text-center"
+              />
+              <input
+                type="text"
+                placeholder="₹ Max Rent"
+                value={maxRent}
+                onChange={(e) => setMaxRent(e.target.value)}
+                className="px-4 py-2 rounded-lg bg-[#2C3554] text-white text-center"
+              />
+            </div>
+
+            {/* Search Filter */}
+            <div className="flex justify-center">
+              <input
+                type="text"
+                placeholder="🔍Name , City or District"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="px-10 py-2 rounded-full bg-[#2C3554] text-white text-center"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Property Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full max-w-6xl">
+          {currentProperties.map(property => (
+            <div key={property._id} className="bg-[#1E293B] rounded-xl shadow-lg hover:shadow-2xl transform transition-all duration-300 overflow-hidden">
+              <Slider {...sliderSettings}>
+                {property.hostelImages.map((image, index) => (
+                  <div key={index}>
+                    <img src={image} alt={property.hostelName} className="w-full h-64 object-cover transition duration-300 transform hover:scale-105" />
+                  </div>
+                ))}
+              </Slider>
+              <div className="p-6 bg-[#2E3A4E] flex flex-col justify-between" style={{ height: '250px' }}>
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2 truncate uppercase">{property.hostelName}</h3>
+                  <span className='text-[#fed400] bg-gray-700  rounded-lg text-sm uppercase'>{property.category} Hostel</span>
+
+                  <p className="text-gray-400 mb-2 truncate">{property.hostelLocation}</p>
+                  <p className="text-white font-bold">RENT/month: <span className='text-[#fed400]'>₹</span>{property.rent}</p>
+                  <p className="text-white font-bold">Deposit: <span className='text-[#fed400]'>₹</span>{property.deposite}</p>
+                </div>
+                <p className="text-[#BEF264] uppercase text-sm">Room Quantity: <span className='text-white'>{property.roomQuantity}</span></p>
+                <Link to={`/propertyDetails/${property._id}`}>
+                  <button className="w-full mt-4 font-bold bg-[#BEF264] text-black py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-[#A0C1B8]">
+                    View Details
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Pagination */}
+        <ReactPaginate
+          previousLabel={'Previous'}
+          nextLabel={'Next'}
+          breakLabel={'...'}
+          pageCount={Math.ceil(filteredProperties.length / propertiesPerPage)}
+          marginPagesDisplayed={2}
+          pageRangeDisplayed={5}
+          onPageChange={handlePageClick}
+          containerClassName={'flex justify-center mt-8 space-x-2'}
+          activeClassName={'bg-[#BEF264] text-[#1B213B] font-bold'}
+          pageClassName={'px-3 py-1 rounded-full cursor-pointer hover:bg-[#3E4C75] transition'}
+          previousClassName={'px-3 py-1 rounded-full cursor-pointer hover:bg-[#3E4C75] transition'}
+          nextClassName={'px-3 py-1 rounded-full cursor-pointer hover:bg-[#3E4C75] transition'}
+          breakClassName={'px-3 py-1'}
+          pageLinkClassName={'text-white'}
+          previousLinkClassName={'text-white'}
+          nextLinkClassName={'text-white'}
+          breakLinkClassName={'text-white'}
+        />
+      </section>
+    </div>
+  );
+};
+
+export default PropertiesByState;

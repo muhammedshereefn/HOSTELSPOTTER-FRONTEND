@@ -1,9 +1,14 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SubscribeButton from '../../components/vendor/SubscribeButton';
+import CustomAlert from '../../components/vendor/CustomAlert';
+import { io } from 'socket.io-client';
+
 
 const SubscriptionLanding = () => {
   const navigate = useNavigate();
+  const [alert, setAlert] = useState({ message: '', type: '', visible: false });
+
 
   useEffect(() => {
     const checkPremiumStatus = async () => {
@@ -36,6 +41,28 @@ const SubscriptionLanding = () => {
     };
 
     checkPremiumStatus();
+
+    const socket = io('http://localhost:5000');
+
+    socket.on('newBooking', ({ userName, bedQuantity, hostelName }) => {
+      setAlert({
+        message: `New Booking! ${userName} booked ${bedQuantity} beds in ${hostelName}`,
+        type: 'success',
+        visible: true,
+      });   
+        });
+
+    socket.on('bookingCancelled', ({ userName, bedQuantity, hostelName }) => {
+      setAlert({
+        message: `Booking Cancelled! ${userName} cancelled ${bedQuantity} beds in ${hostelName}`,
+        type: 'error',
+        visible: true,
+      });
+ });
+
+    return () => {
+      socket.disconnect();
+    };
   }, [navigate]);
 
   // Benefits of the subscription
@@ -52,6 +79,13 @@ const SubscriptionLanding = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-yellow-500 to-transparent opacity-20 blur-lg pointer-events-none"></div>
       
       <header className="w-full p-4 flex justify-between items-center shadow-md px-8 sm:pl-14 bg-black">
+      {alert.visible && (
+        <CustomAlert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert({ ...alert, visible: false })}
+        />
+      )}
         <h1 className="text-2xl font-bold text-white">
           <span className='text-gray-200'>BRO</span>STEL <span className='text-yellow-500 text-base'>premium</span>
         </h1>

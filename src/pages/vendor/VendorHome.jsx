@@ -1,14 +1,21 @@
 import { useEffect, useState } from 'react';
 import vendorAxiosInstance from '../../api/vendor/axios';
 import { useNavigate } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import  { Toaster } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { io } from 'socket.io-client';
+
 import premiumIcon from '/vendor/pngwing.com (3).png'; 
+import CustomAlert from '../../components/vendor/CustomAlert';
 
 const VendorHome = () => {
   const navigate = useNavigate();
   const [kycStatus, setKycStatus] = useState(null);
   const [getPremium, setGetPremium] = useState(false); 
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const [alert, setAlert] = useState({ message: '', type: '', visible: false });
+
 
   useEffect(() => {
     const checkVendorStatus = async () => {
@@ -43,6 +50,29 @@ const VendorHome = () => {
     };
 
     checkVendorStatus();
+
+    const socket = io('http://localhost:5000');
+
+    socket.on('newBooking', ({ userName, bedQuantity, hostelName }) => {
+      setAlert({
+        message: `New Booking! ${userName} booked ${bedQuantity} beds in ${hostelName}`,
+        type: 'success',
+        visible: true,
+      });   
+        });
+
+    socket.on('bookingCancelled', ({ userName, bedQuantity, hostelName }) => {
+      setAlert({
+        message: `Booking Cancelled! ${userName} cancelled ${bedQuantity} beds in ${hostelName}`,
+        type: 'error',
+        visible: true,
+      });
+ });
+
+    return () => {
+      socket.disconnect();
+    };
+
   }, [navigate]);
 
   // Function to toggle mobile nav menu
@@ -53,6 +83,15 @@ const VendorHome = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#101820FF] text-white">
       <Toaster position="top-center" reverseOrder={false} />
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+
+      {alert.visible && (
+        <CustomAlert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert({ ...alert, visible: false })}
+        />
+      )}
 
       {/* Navbar */}
       <nav className="w-full bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 py-4 shadow-lg">
@@ -109,6 +148,7 @@ const VendorHome = () => {
             >
               Chat's
             </button> */}
+
             <button
               className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300"
               onClick={() => navigate('/vendor/propertiesList')}
@@ -117,7 +157,7 @@ const VendorHome = () => {
             </button>
             <button
               className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300 relative"
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate('/vendor/profile')}
             >
               Profile
               {getPremium && (
@@ -128,6 +168,7 @@ const VendorHome = () => {
                 />
               )}
             </button>
+
             {!getPremium && (
               <button
                 className="border border-[#ff0000] bg-red-500 text-white text-sm rounded-full px-4 py-2 hover:bg-red-800 hover:text-white transition duration-300"
@@ -135,7 +176,9 @@ const VendorHome = () => {
               >
                 SUBSCRIBE
               </button>
+              
             )}
+
           </div>
         </div>
         {/* Mobile Menu */}
@@ -155,7 +198,7 @@ const VendorHome = () => {
             </button>
             <button
               className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800 relative"
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate('/vendor/profile')}
             >
               Profile
               {getPremium && (
