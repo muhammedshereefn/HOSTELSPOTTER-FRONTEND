@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { FaHistory, FaRegUserCircle } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaHistory, FaRegUserCircle } from 'react-icons/fa';
 import ReactPaginate from 'react-paginate';
 
 const PropertiesByState = () => {
   const { state } = useParams();
+  const navigate = useNavigate();
   const [properties, setProperties] = useState([]);
   const [filteredProperties, setFilteredProperties] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -89,11 +90,22 @@ const PropertiesByState = () => {
             </button>
           </Link>
         </div>
+        
       </header>
+      
       <section className="w-full px-8 py-12 flex flex-col items-center">
-        <h2 className="pb-10 text-3xl font-bold uppercase text-[#BEF264] mb-11 text-center">
-          <span className='text-white'>Available Properties</span> {state}
-        </h2>
+      <div className="w-full max-w-6xl mb-8 flex justify-between items-center">
+          <h2 className="text-3xl font-bold uppercase text-[#BEF264]">
+            <span className='text-white'>Available Properties</span> {state}
+          </h2>
+          <button
+            className="hidden md:block px-4 py-2 bg-[#BEF264] text-[#1B213B] rounded-lg font-bold hover:bg-[#A0C1B8]"
+            onClick={() => navigate(-1)}
+          >
+            Back
+          </button>
+        </div>
+        
 
         {/* Filters Section */}
         <div className="w-full max-w-6xl mb-8">
@@ -175,24 +187,34 @@ const PropertiesByState = () => {
 
         {/* Pagination */}
         <ReactPaginate
-          previousLabel={'Previous'}
-          nextLabel={'Next'}
-          breakLabel={'...'}
-          pageCount={Math.ceil(filteredProperties.length / propertiesPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={'flex justify-center mt-8 space-x-2'}
-          activeClassName={'bg-[#BEF264] text-[#1B213B] font-bold'}
-          pageClassName={'px-3 py-1 rounded-full cursor-pointer hover:bg-[#3E4C75] transition'}
-          previousClassName={'px-3 py-1 rounded-full cursor-pointer hover:bg-[#3E4C75] transition'}
-          nextClassName={'px-3 py-1 rounded-full cursor-pointer hover:bg-[#3E4C75] transition'}
-          breakClassName={'px-3 py-1'}
-          pageLinkClassName={'text-white'}
-          previousLinkClassName={'text-white'}
-          nextLinkClassName={'text-white'}
-          breakLinkClassName={'text-white'}
-        />
+  previousLabel={
+    <span className="flex items-center space-x-2">
+      <FaArrowLeft />
+      <span >Previous</span>
+    </span>
+  }
+  nextLabel={
+    <span className="flex items-center space-x-2">
+      <span className='text-gray-300'>Next</span>
+      <FaArrowRight />
+    </span>
+  }
+  breakLabel={'...'}
+  pageCount={Math.ceil(filteredProperties.length / propertiesPerPage)}
+  marginPagesDisplayed={2}
+  pageRangeDisplayed={5}
+  onPageChange={handlePageClick}
+  containerClassName={'flex justify-center mt-8 space-x-2'}
+  activeClassName={'bg-black text-[#1B213B] font-bold'}
+  pageClassName={'px-3 py-1 rounded-xl cursor-pointer hover:bg-[#3E4C75] transition'}
+  previousClassName={'px-3 py-1 bg-[#3E4C75] rounded-full cursor-pointer hover:bg-[#2C3A5A] transition'}
+  nextClassName={'px-3 py-1 bg-[#3E4C75] rounded-full cursor-pointer hover:bg-[#2C3A5A] transition'}
+  breakClassName={'px-3 py-1'}
+  pageLinkClassName={'text-white'}
+  previousLinkClassName={'text-white'}
+  nextLinkClassName={'text-white'}
+  breakLinkClassName={'text-white'}
+/>
       </section>
     </div>
   );

@@ -75,6 +75,22 @@ const VendorHome = () => {
 
   }, [navigate]);
 
+
+  const handleChatClick = async () => {
+    try {
+      const response = await vendorAxiosInstance.get('/vendors/vendorId', {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('vendorToken')}`,
+        },
+      });
+      const vendorId = response.data.vendorId;
+      navigate('/vendor/chat', { state: { vendorId } });
+    } catch (error) {
+      toast.error('Failed to get vendor ID');
+    }
+  };
+
+
   // Function to toggle mobile nav menu
   const toggleMobileNav = () => {
     setIsMobileNavOpen(!isMobileNavOpen);
@@ -142,12 +158,12 @@ const VendorHome = () => {
           </div>
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8 text-white">
-            {/* <button
+          <button
               className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300"
-              onClick={() => navigate('/vendor/chat')}
+              onClick={handleChatClick}
             >
               Chat's
-            </button> */}
+            </button>
 
             <button
               className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300"

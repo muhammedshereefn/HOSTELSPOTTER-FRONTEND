@@ -73,21 +73,10 @@ const Sidebar = () => {
                 title="Payments"
               >
                 <FaMoneyBill className="text-white" />
-                <span className="ml-2 text-white">Payments</span>
+                <span className="ml-2 text-white">Revenues</span>
               </Link>
             </li>
-            <li className="mb-4">
-              <Link
-                to="/admin/communication"
-                className={`flex items-center p-2 hover:bg-[#6a6cff] rounded-lg shadow-lg transform transition-transform hover:translate-x-1 ${
-                  location.pathname === '/admin/communication' ? 'bg-[#6a6cff]' : ''
-                }`}
-                title="Communication"
-              >
-                <FaComments className="text-white" />
-                <span className="ml-2 text-white">Communication</span>
-              </Link>
-            </li>
+
             <li>
             <button
                 onClick={handleLogout}

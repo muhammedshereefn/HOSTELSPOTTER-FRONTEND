@@ -35,6 +35,9 @@ import BookingList from './pages/vendor/BookingList';
 import UserBookingHistory from './pages/admin/UserBookingHistory';
 import VendorProfile from './pages/vendor/VendorProfile';
 import PropertiesByState from './pages/user/PropertiesByState';
+import PaymentsPage from './pages/admin/PaymentsPage';
+import NotFound from './pages/NotFound';
+import UserChatPage from './pages/user/UserChatPage';
 
 
 
@@ -54,6 +57,8 @@ const App = () => {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/bookingHistory" element={<BookingHistoryPage />} />
         <Route path="/properties/:state" element={<PropertiesByState />} />
+        <Route path="/chat" element={<UserChatPage />} />
+
 
 
 
@@ -83,7 +88,10 @@ const App = () => {
         <Route path='/admin/kyc/:vendorId' element={<VendorKYCApproval/>}/>
         <Route path='/admin/vendor-properties/:vendorId' element={<VendorProperties/>}/>
         <Route path="/admin/user/:userId/booking-history" element={<UserBookingHistory />} />
+        <Route path="/admin/payments" element={<PaymentsPage />} />
 
+
+        <Route path="*" element={<NotFound />} />
 
 
       </Routes>

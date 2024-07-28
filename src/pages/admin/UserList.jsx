@@ -1,7 +1,7 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/admin/Sidebar';
-import { FaTrashAlt, FaEnvelope, FaBan, FaUnlock } from 'react-icons/fa';
+import { FaTrashAlt,  FaBan, FaUnlock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const UsersList = () => {
@@ -9,6 +9,8 @@ const UsersList = () => {
   const [filter, setFilter] = useState('');
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 5;
 
   const navigate = useNavigate();
   const adminToken = localStorage.getItem('adminToken');
@@ -80,6 +82,16 @@ const UsersList = () => {
     (filter === '' || (filter === 'Active' && !user.isBlocked) || (filter === 'Blocked' && user.isBlocked))
   );
 
+  // Calculate paginated users
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   if (error) {
     return <div className="flex items-center justify-center h-screen text-red-500">{error}</div>;
   }
@@ -122,16 +134,15 @@ const UsersList = () => {
               </tr>
             </thead>
             <tbody className="text-gray-800">
-              {filteredUsers.map((user, index) => (
+              {currentUsers.map((user, index) => (
                 <tr key={user._id} className="border-b border-gray-400 hover:bg-gray-200 transition duration-200">
-                  <td className="py-4 px-6">{index + 1}</td>
+                  <td className="py-4 px-6">{indexOfFirstUser + index + 1}</td>
                   <td className="py-4 px-6">{user.name}</td>
                   <td className="py-4 px-6">{user.email}</td>
                   <td className="py-4 px-6">{user.contact}</td>
                   <td className="py-4 px-6">{user.isBlocked ? 'Blocked' : 'Active'}</td>
                   <td className="py-4 px-6 flex justify-center space-x-4">
                     <FaTrashAlt className="text-red-500 cursor-pointer hover:scale-125 transition-transform" onClick={() => handleDeleteUser(user._id)} />
-                    <FaEnvelope className="text-blue-500 cursor-pointer hover:scale-125 transition-transform" />
                     {user.isBlocked ? (
                       <FaUnlock className="text-green-500 cursor-pointer hover:scale-125 transition-transform" onClick={() => handleUnblockUser(user._id)} />
                     ) : (
@@ -148,6 +159,17 @@ const UsersList = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="flex justify-center mt-4 space-x-2">
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={`px-4 py-2 rounded-lg ${currentPage === index + 1 ? 'bg-black text-white' : 'bg-gray-200 text-black'}`}
+            >
+              {index + 1}
+            </button>
+          ))}
         </div>
       </main>
     </div>

@@ -29,9 +29,9 @@ const LandingPage = () => {
 
   return (
     <div ref={vantaRef} className="min-h-screen flex items-center justify-center bg-dark-blue">
-      <div className="flex flex-col md:flex-row max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden bg-white bg-opacity-10 backdrop-blur-lg glass-container">
-        <div className="w-full md:w-1/2 p-8 bg-gradient-to-br to-indigo-800 text-white flex flex-col justify-center">
-          <h1 className="text-4xl font-extrabold mb-6">Welcome to <span className="text-[#aeed40]">BRO</span>STEL</h1>
+      <div className="flex flex-col md:flex-row max-w-5xl mx-auto rounded-2xl shadow-2xl overflow-hidden bg-white bg-opacity-20 backdrop-blur-lg glass-container">
+        <div className="w-full md:w-1/2 p-8 bg-gradient-to-br text-white flex flex-col justify-center">
+          <h1 className="text-4xl font-extrabold mb-6 ">WELCOME TO <span className="text-[#aeed40]">BRO</span>STEL</h1>
           <p className="text-lg mb-8">
             Browse through hundreds of hostel and PG listings tailored for students. Discover the perfect place to stay or list your property with ease. Get started by selecting your preference below.
           </p>

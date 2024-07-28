@@ -121,59 +121,80 @@ const VendorProperties = () => {
         </div>
       </main>
       {selectedProperty && (
-    <Modal
-    isOpen={modalIsOpen}
-    onRequestClose={closeModal}
-    contentLabel="Property Details"
-    className="flex items-center justify-center min-h-screen"
-    overlayClassName="fixed inset-0 bg-black bg-opacity-75"
-  >
-    <div className="bg-gray-800 p-8 rounded-lg shadow-lg text-white max-w-lg w-full relative overflow-auto max-h-screen">
-      <h2 className="text-2xl font-bold mb-4">{selectedProperty.hostelName}</h2>
-      <p><strong>Location:</strong> {selectedProperty.hostelLocation}</p>
-      <p><strong>State:</strong> {selectedProperty.state}</p>
-      <p><strong>District:</strong> {selectedProperty.district}</p>
-      <p><strong>City:</strong> {selectedProperty.city}</p>
-      <p><strong>Owner:</strong> {selectedProperty.ownerName}</p>
-      <p><strong>Email:</strong> {selectedProperty.ownerEmail}</p>
-      <p><strong>Contact:</strong> {selectedProperty.ownerContact}</p>
-      <p><strong>Rent:</strong> {selectedProperty.rent}</p>
-      <p><strong>Deposit:</strong> {selectedProperty.deposite}</p>
-      <p><strong>Target:</strong> {selectedProperty.target.join(', ')}</p>
-      <p><strong>Policies:</strong> {selectedProperty.policies.join(', ')}</p>
-      <p><strong>Facilities:</strong> {selectedProperty.facilities.join(', ')}</p>
-      <p><strong>Category:</strong> {selectedProperty.category}</p>
-      <p><strong>Available Plans:</strong> {selectedProperty.availablePlans.join(', ')}</p>
-      <p><strong>Nearby Access:</strong> {selectedProperty.nearbyAccess.join(', ')}</p>
-      <p><strong>Room Quantity:</strong> {selectedProperty.roomQuantity}</p>
-      <div>
-        <strong>Room Bed Quantities:</strong>
-        <ul className="list-disc list-inside">
-          {selectedProperty.roomBedQuantities.map((room, index) => (
-            <li key={index}>
-              {room.roomName}: {room.bedQuantity} beds
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="mt-4">
-        <strong>Hostel Images:</strong>
-        <div className="flex space-x-2">
-          {selectedProperty.hostelImages.map((image, index) => (
-            <img key={index} src={image} alt={`Hostel Image ${index + 1}`} className="w-20 h-20 rounded-lg object-cover" />
-          ))}
-        </div>
-      </div>
-      <p className="mt-4"><strong>Longitude:</strong> {selectedProperty.longitude}</p>
-      <p><strong>Latitude:</strong> {selectedProperty.latitude}</p>
-      <button
-        onClick={closeModal}
-        className="absolute top-2 right-2 bg-red-600 text-white hover:bg-red-700 font-bold py-2 px-4 rounded transition duration-300"
+        <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Property Details"
+        className="flex items-center justify-center min-h-screen"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-75"
       >
-        Close
-      </button>
-    </div>
-  </Modal>
+        <div className="bg-gray-300 p-8 rounded-lg shadow-lg text-white max-w-4xl w-full relative overflow-auto max-h-screen">
+          <div className="border-b border-gray-600 pb-4 mb-4">
+            <h2 className="text-3xl font-bold mb-2 text-[#000000]">{selectedProperty.hostelName}</h2>
+            <p className="text-xl font-semibold mb-2 text-black">ADDRESS: {selectedProperty.hostelLocation}</p>
+          </div>
+      
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div className="border border-gray-600 rounded-lg p-4 bg-gray-700">
+              <h3 className="text-xl font-semibold mb-2">General Information</h3>
+              <p><strong>State:</strong> {selectedProperty.state}</p>
+              <p><strong>District:</strong> {selectedProperty.district}</p>
+              <p><strong>City:</strong> {selectedProperty.city}</p>
+              <p><strong>Owner:</strong> {selectedProperty.ownerName}</p>
+              <p><strong>Email:</strong> {selectedProperty.ownerEmail}</p>
+              <p><strong>Contact:</strong> {selectedProperty.ownerContact}</p>
+            </div>
+      
+            <div className="border border-gray-600 rounded-lg p-4 bg-gray-700">
+              <h3 className="text-xl font-semibold mb-2">Financials</h3>
+              <p><strong>Rent:</strong> {selectedProperty.rent}</p>
+              <p><strong>Deposit:</strong> {selectedProperty.deposite}</p>
+            </div>
+          </div>
+      
+          <div className="border border-gray-600 rounded-lg p-4 bg-gray-700 mb-6">
+            <h3 className="text-xl font-semibold mb-2">Details</h3>
+            <p><strong>Target:</strong> {selectedProperty.target.join(', ')}</p>
+            <p><strong>Policies:</strong> {selectedProperty.policies.join(', ')}</p>
+            <p><strong>Facilities:</strong> {selectedProperty.facilities.join(', ')}</p>
+            <p><strong>Category:</strong> {selectedProperty.category}</p>
+            <p><strong>Available Plans:</strong> {selectedProperty.availablePlans.join(', ')}</p>
+            <p><strong>Nearby Access:</strong> {selectedProperty.nearbyAccess.join(', ')}</p>
+            <p><strong>Room Quantity:</strong> {selectedProperty.roomQuantity}</p>
+          </div>
+      
+          <div className="border border-gray-600 rounded-lg p-4 bg-gray-700 mb-6">
+            <h3 className="text-xl font-semibold mb-2">Room Bed Quantities</h3>
+            <ul className="list-disc list-inside">
+              {selectedProperty.roomBedQuantities.map((room, index) => (
+                <li key={index}>
+                  {room.roomName}: {room.bedQuantity} beds
+                </li>
+              ))}
+            </ul>
+          </div>
+      
+          <div className="border border-gray-600 rounded-lg p-4 bg-gray-700 mb-6">
+            <h3 className="text-xl font-semibold mb-2">Hostel Images</h3>
+            <div className="flex space-x-2 overflow-x-auto">
+              {selectedProperty.hostelImages.map((image, index) => (
+                <img key={index} src={image} alt={`Hostel Image ${index + 1}`} className="w-32 h-32 rounded-lg object-cover" />
+              ))}
+            </div>
+          </div>
+      
+          <div className="flex justify-between items-center text-black mt-4">
+            <p><strong>Longitude:</strong> {selectedProperty.longitude}</p>
+            <p><strong>Latitude:</strong> {selectedProperty.latitude}</p>
+            <button
+              onClick={closeModal}
+              className="bg-red-600 text-white hover:bg-red-700 font-bold py-2 px-4 rounded transition duration-300"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </Modal>
       )}
     </div>
   );

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
 import toast, { Toaster } from 'react-hot-toast';
-import { FaRegUserCircle, FaCheckCircle, FaHistory, FaHome, FaMapMarkerAlt, FaLocationArrow } from 'react-icons/fa';
+import { FaRegUserCircle, FaCheckCircle, FaHistory, FaHome, FaMapMarkerAlt, FaLocationArrow, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import houseImage from '../../../public/vendor/Designer (1).png';
 import thumbsUpImage from '../../../public/vendor/Designer (2).png'; 
 
@@ -33,6 +33,9 @@ const HomePage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentPage, setCurrentPage] = useState(0);
   const propertiesPerPage = 4;
+
+  const exploreSectionRef = useRef(null);
+
 
   useEffect(() => {
     const fetchPropertiesGroupedByState = async () => {
@@ -110,6 +113,13 @@ const HomePage = () => {
     setCurrentPage(selected);
   };
 
+
+  const handleExploreClick = () => {
+    if (exploreSectionRef.current) {
+      exploreSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const offset = currentPage * propertiesPerPage;
   const currentProperties = filteredProperties.slice(offset, offset + propertiesPerPage);
 
@@ -139,7 +149,7 @@ const HomePage = () => {
           <h2 className="text-4xl font-bold leading-tight">Find <span className='text-[#BEF264]'>Hostels</span> and <span className='text-[#BEF264]'>PGs</span> which suit you.</h2>
           <p className="text-lg text-gray-400">Browse through hundreds of hostel/PG listings. Get started by selecting your preference below.</p>
 
-          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full ">
+          {/* <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full ">
             <input
               type="text"
               placeholder="Eg: City, State, Landmark"
@@ -149,9 +159,9 @@ const HomePage = () => {
               <option>men</option>
               <option>women</option>
             </select>
-          </div>
+          </div> */}
 
-          <button className="p-3 bg-[#BEF264] text-[#1B213B] rounded-full w-40 font-bold">Explore</button>
+          <button className="p-3 bg-[#BEF264] text-[#1B213B] rounded-full w-40 font-bold" onClick={handleExploreClick}>Explore</button>
         </div>
         {/* search section */}
         <div className="flex justify-center items-center sm:w-1/2 mt-8 sm:mt-0 sm:px-8 hidden sm:block">
@@ -199,7 +209,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="w-full px-8 flex flex-col items-center mt-12">
+      <section ref={exploreSectionRef} className="w-full px-8 flex flex-col items-center mt-12">
         <h2 className="pb-10 text-3xl font-bold text-[#BEF264] mb-11">
           <span className="text-white">EXPLORE WITH </span> STATES
         </h2>
@@ -279,24 +289,34 @@ const HomePage = () => {
         </div>
 
         <ReactPaginate
-          previousLabel={'Previous'}
-          nextLabel={'Next'}
-          breakLabel={'...'}
-          pageCount={Math.ceil(filteredProperties.length / propertiesPerPage)}
-          marginPagesDisplayed={2}
-          pageRangeDisplayed={5}
-          onPageChange={handlePageClick}
-          containerClassName={'flex justify-center mt-8 space-x-2'}
-          activeClassName={'bg-[#BEF264] text-[#1B213B] font-bold'}
-          pageClassName={'px-3 py-1 rounded-full cursor-pointer hover:bg-[#3E4C75] transition'}
-          previousClassName={'px-3 py-1 rounded-full cursor-pointer hover:bg-[#3E4C75] transition'}
-          nextClassName={'px-3 py-1 rounded-full cursor-pointer hover:bg-[#3E4C75] transition'}
-          breakClassName={'px-3 py-1'}
-          pageLinkClassName={'text-white'}
-          previousLinkClassName={'text-white'}
-          nextLinkClassName={'text-white'}
-          breakLinkClassName={'text-white'}
-        />
+  previousLabel={
+    <span className="flex items-center space-x-2">
+      <FaArrowLeft />
+      <span >Previous</span>
+    </span>
+  }
+  nextLabel={
+    <span className="flex items-center space-x-2">
+      <span>Next</span>
+      <FaArrowRight />
+    </span>
+  }
+  breakLabel={'...'}
+  pageCount={Math.ceil(filteredProperties.length / propertiesPerPage)}
+  marginPagesDisplayed={2}
+  pageRangeDisplayed={5}
+  onPageChange={handlePageClick}
+  containerClassName={'flex justify-center mt-8 space-x-2'}
+  activeClassName={'bg-black text-[#1B213B] font-bold'}
+  pageClassName={'px-3 py-1 rounded-xl cursor-pointer hover:bg-[#3E4C75] transition'}
+  previousClassName={'px-3 py-1 bg-[#3E4C75] rounded-full cursor-pointer hover:bg-[#2C3A5A] transition'}
+  nextClassName={'px-3 py-1 bg-[#3E4C75] rounded-full cursor-pointer hover:bg-[#2C3A5A] transition'}
+  breakClassName={'px-3 py-1'}
+  pageLinkClassName={'text-white'}
+  previousLinkClassName={'text-white'}
+  nextLinkClassName={'text-white'}
+  breakLinkClassName={'text-white'}
+/>
       </section>
 
       <footer className="w-full bg-[#000000] p-4 flex justify-center items-center text-gray-400">

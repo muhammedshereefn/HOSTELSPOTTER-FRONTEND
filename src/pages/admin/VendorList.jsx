@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../../components/admin/Sidebar';
-import { FaEnvelope, FaBan, FaUnlock } from 'react-icons/fa';
+import {  FaBan, FaUnlock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import PremiumBadge from '/vendor/pngwing.com (3).png'; // Adjust the path to your badge image
+import PremiumBadge from '/vendor/pngwing.com (3).png'; 
 
 const VendorsList = () => {
   const [vendors, setVendors] = useState([]);
   const [filter, setFilter] = useState('');
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const vendorsPerPage = 5;
 
   const navigate = useNavigate();
   const adminToken = localStorage.getItem('adminToken');
@@ -73,6 +75,13 @@ const VendorsList = () => {
     (filter === '' || (filter === 'Active' && !vendor.isBlocked) || (filter === 'Blocked' && vendor.isBlocked) || (filter === 'Premium' && vendor.getPremium))
   );
 
+  // Get current vendors for pagination
+  const indexOfLastVendor = currentPage * vendorsPerPage;
+  const indexOfFirstVendor = indexOfLastVendor - vendorsPerPage;
+  const currentVendors = filteredVendors.slice(indexOfFirstVendor, indexOfLastVendor);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   if (error) {
     return <div className="flex items-center justify-center h-screen text-red-500">{error}</div>;
   }
@@ -114,13 +123,13 @@ const VendorsList = () => {
                 <th className="py-4 px-6 text-left">Status</th>
                 <th className="py-4 px-6 text-left">KYC</th>
                 <th className="py-4 px-6 text-left">Properties</th>
-                <th className="py-4 px-6 text-center">Actions</th>
+                <th className="py-4 px-6 text-center">Action</th>
               </tr>
             </thead>
             <tbody className="text-gray-800">
-              {filteredVendors.map((vendor, index) => (
+              {currentVendors.map((vendor, index) => (
                 <tr key={vendor._id} className="border-b border-gray-400 hover:bg-gray-200 transition duration-200">
-                  <td className="py-4 px-6">{index + 1}</td>
+                  <td className="py-4 px-6">{indexOfFirstVendor + index + 1}</td>
                   <td className="py-4 px-6 relative">
                     {vendor.name}
                     {vendor.getPremium && (
@@ -151,7 +160,6 @@ const VendorsList = () => {
                     </button>
                   </td>
                   <td className="py-4 px-6 flex justify-center space-x-4">
-                    <FaEnvelope className="text-blue-500 cursor-pointer hover:scale-125 transition-transform" />
                     {vendor.isBlocked ? (
                       <FaUnlock className="text-green-500 cursor-pointer hover:scale-125 transition-transform" onClick={() => handleUnblockVendor(vendor._id)} />
                     ) : (
@@ -162,6 +170,22 @@ const VendorsList = () => {
               ))}
             </tbody>
           </table>
+          <div className="flex justify-center mt-4">
+            <nav>
+              <ul className="flex space-x-2">
+                {Array.from({ length: Math.ceil(filteredVendors.length / vendorsPerPage) }, (_, i) => (
+                  <li key={i + 1}>
+                    <button
+                      onClick={() => paginate(i + 1)}
+                      className={`py-2 px-4 rounded-lg shadow-md focus:outline-none ${currentPage === i + 1 ? 'bg-black text-white' : 'bg-gray-200 text-black'}`}
+                    >
+                      {i + 1}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
         </div>
       </main>
     </div>

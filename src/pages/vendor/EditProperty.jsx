@@ -120,7 +120,7 @@ const EditProperty = () => {
     if (imageFiles.length > 0) {
       try {
         const imageUrls = await uploadImages(imageFiles);
-        formData.hostelImages = imageUrls;
+        formData.hostelImages = [...formData.hostelImages, ...imageUrls];
       } catch (error) {
         console.error('Error uploading images:', error);
         toast.error('An error occurred while uploading images');

@@ -6,13 +6,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { format } from 'date-fns';
 import { io } from 'socket.io-client';
 import CustomAlert from '../../components/vendor/CustomAlert';
-
+import ReactPaginate from 'react-paginate';
 
 const BookingList = () => {
   const { hostelName } = useParams();
   const [bookings, setBookings] = useState([]);
   const [alert, setAlert] = useState({ message: '', type: '', visible: false });
-
+  const [currentPage, setCurrentPage] = useState(0);
+  const [bookingsPerPage] = useState(10); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,8 +45,8 @@ const BookingList = () => {
           message: `New Booking! ${userName} booked ${bedQuantity} beds in ${hostelName}`,
           type: 'success',
           visible: true,
-        });  
-                fetchBookings();
+        });
+        fetchBookings();
       }
     });
 
@@ -56,7 +57,7 @@ const BookingList = () => {
           type: 'error',
           visible: true,
         });
-                fetchBookings();
+        fetchBookings();
       }
     });
 
@@ -65,10 +66,17 @@ const BookingList = () => {
     };
   }, [hostelName, navigate]);
 
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
+  };
+
+  const offset = currentPage * bookingsPerPage;
+  const currentBookings = bookings.slice(offset, offset + bookingsPerPage);
+
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-black p-4">
       <button
-        className="mt-8 py-2 px-4 mb-3 bg-[#F2AA4CFF] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
+        className="mt-8 uppercase py-2 ml-24 px-4 mb-3 bg-[#F2AA4CFF] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
         onClick={() => navigate('/vendor/propertiesList')}
       >
         Back to Properties
@@ -81,12 +89,12 @@ const BookingList = () => {
           onClose={() => setAlert({ ...alert, visible: false })}
         />
       )}
-      <div className="flex flex-col items-center justify-center w-full max-w-6xl p-8 bg-gray-800 shadow-lg rounded-3xl">
-        <h2 className="text-3xl font-semibold text-white mb-6">
-          <span className="text-[#F2AA4CFF]">Bookings</span> for {hostelName}
+      <div className="w-full max-w-6xl p-8 bg-gray-800 shadow-lg rounded-3xl mx-auto">
+        <h2 className="text-2xl font-semibold text-white mb-6 uppercase ">
+          <span className="text-[#F2AA4CFF] uppercase text-2xl">Bookings</span> for {hostelName}
         </h2>
-        {bookings.length === 0 ? (
-          <p className="text-white">No bookings found.</p>
+        {currentBookings.length === 0 ? (
+          <p className="text-red-400">No bookings found.</p>
         ) : (
           <div className="w-full overflow-x-auto">
             <table className="min-w-full bg-gray-800">
@@ -100,8 +108,8 @@ const BookingList = () => {
                 </tr>
               </thead>
               <tbody>
-                {bookings.map((booking, index) => (
-                  <tr key={index} className="bg-gray-700 border-b  border-gray-600">
+                {currentBookings.map((booking, index) => (
+                  <tr key={index} className="bg-gray-700 border-b border-gray-600">
                     <td className="py-2 px-4 text-white">{booking.name}</td>
                     <td className="py-2 px-4 text-white">{booking.contact}</td>
                     <td className="py-2 px-4 text-white">{booking.roomName}</td>
@@ -113,6 +121,27 @@ const BookingList = () => {
             </table>
           </div>
         )}
+        <div className="flex justify-center mt-4">
+          <ReactPaginate
+            previousLabel={'Previous'}
+            nextLabel={'Next'}
+            breakLabel={'...'}
+            breakClassName={'break-me'}
+            pageCount={Math.ceil(bookings.length / bookingsPerPage)}
+            marginPagesDisplayed={2}
+            pageRangeDisplayed={5}
+            onPageChange={handlePageClick}
+            containerClassName={'flex items-center space-x-2'}
+            activeClassName={'bg-black text-black px-3 py-1 rounded-full shadow-lg'}
+            pageClassName={'page-item'}
+            pageLinkClassName={'px-3 py-1 text-white rounded-full hover:bg-gray-600 transition'}
+            previousClassName={'page-item'}
+            previousLinkClassName={'px-3 py-1 text-white bg-gray-700 rounded-full hover:bg-gray-600 transition'}
+            nextClassName={'page-item'}
+            nextLinkClassName={'px-3 py-1 text-white bg-gray-700 rounded-full hover:bg-gray-600 transition'}
+            breakLinkClassName={'px-3 py-1 text-white bg-gray-700 rounded-full'}
+          />
+        </div>
       </div>
     </div>
   );

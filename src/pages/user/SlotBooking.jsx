@@ -74,6 +74,12 @@ const SlotBooking = () => {
   return (
     <div className="bg-[1E2530] text-white p-6 rounded-lg shadow-lg">
       <h2 className="text-3xl font-semibold mb-4">{roomType}</h2>
+      <button
+          onClick={() => navigate(-1)}
+          className=" px-4 py-2 bg-[#BEF264] text-[#1B213B] rounded-lg font-bold hover:bg-[#A0C1B8]"
+        >
+          Back
+        </button>
       <div className="mb-6 p-4 bg-gray-800 rounded-lg shadow-inner">
         <h3 className="text-xl font-semibold mb-2">Advance Booking <span className='text-red-400'>Instructions</span></h3>
         <p className="text-sm text-gray-300">
@@ -96,7 +102,7 @@ const SlotBooking = () => {
       </div>
       <button
         onClick={handlePayment}
-        className="bg-[#BEF264] font-bold text-black py-3 px-6 rounded-lg hover:bg-[#93c33f] focus:outline-none focus:ring-2  shadow-md"
+        className="bg-[#BEF264] uppercase font-bold text-black py-3 px-6 rounded-lg hover:bg-[#93c33f] focus:outline-none focus:ring-2  shadow-md"
       >
         Pay for Selected Beds
       </button>

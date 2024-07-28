@@ -1,170 +1,10 @@
-// import React, { useEffect, useState } from 'react';
-// import { useParams, useNavigate, Link } from 'react-router-dom';
-// import axios from 'axios';
-// import { FaUserCircle, FaEnvelope, FaRegComments } from 'react-icons/fa';
-
-// const PropertyDetails = () => {
-//   const { id } = useParams();
-//   const navigate = useNavigate();
-//   const [property, setProperty] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [selectedImage, setSelectedImage] = useState(null);
-
-//   useEffect(() => {
-//     const fetchPropertyDetails = async () => {
-//       try {
-//         const response = await axios.get(`http://localhost:5000/api/users/properties/${id}`);
-//         setProperty(response.data);
-//         setLoading(false);
-//       } catch (error) {
-//         console.error('Error fetching property details:', error);
-//         navigate('/home'); // Redirect to home if there is an error
-//       }
-//     };
-
-//     fetchPropertyDetails();
-//   }, [id, navigate]);
-
-//   const openImageModal = (image) => {
-//     setSelectedImage(image);
-//   };
-
-//   const closeImageModal = () => {
-//     setSelectedImage(null);
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="flex justify-center items-center min-h-screen bg-[#2C3554] text-white">
-//         <div className="text-center">
-//           <div className="loader"></div>
-//           <p>Loading...</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   if (!property) {
-//     return <div className="flex justify-center items-center min-h-screen text-white">Property not found.</div>;
-//   }
-
-//   return (
-//     <div className="min-h-screen text-white flex flex-col items-center ">
-//       <header className="w-full p-4 flex justify-between items-center shadow-md px-8 sm:pl-14 ">
-//         <h1 className="text-2xl font-bold text-[#BEF264]"><span className='text-white'>BRO</span>STEL</h1>
-//         <button onClick={() => navigate(-1)} className="bg-[#BEF264] text-[#000000] py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-[#A0C1B8]">Back</button>
-//       </header>
-      
-//       <main className="flex flex-col items-center mt-12 text-left px-4 w-full max-w-6xl">
-//         <h2 className="text-3xl font-bold mb-4">{property.hostelName}</h2>
-//         <div className="w-full flex flex-col lg:flex-row gap-6">
-//           <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
-//             {property.hostelImages?.map((image, index) => (
-//               <div key={index} className="relative">
-//                 <img
-//                   src={image}
-//                   alt={property.hostelName}
-//                   className="w-full h-auto object-cover border transition duration-300 transform hover:scale-105 rounded-lg shadow-md cursor-pointer"
-//                   style={{ maxHeight: '300px' }}
-//                   onClick={() => openImageModal(image)}
-//                 />
-//               </div>
-//             ))}
-//           </div>
-//           <div className="p-4 bg-[#4c525e5b] rounded-lg shadow-md w-full lg:w-1/3">
-//             <ul className="list-none space-y-4 text-sm lg:text-base">
-//               <li className="text-gray-200">{property.category}</li>
-//               <li className="text-[#ffffff] font-bold text-3xl">RENT/month: <span className='text-[#BEF264]'>₹</span> {property.rent}</li>
-//               <li className="text-[#ffffff] font-bold">Deposit: <span className='text-[#BEF264]'>₹</span> {property.deposite}</li>
-//               <li className="text-[#BEF264]">Room Quantity: <span className='text-white'>{property.roomQuantity}</span></li>
-//               <li className="text-gray-200"><strong>Location:</strong> {property.hostelLocation}</li>
-//               <div className="mt-4 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-//                 <div className="flex items-center space-x-2">
-//                   <Link to="/chat">
-//                     <button className="p-2 bg-[#BEF264] text-[#1B213B] rounded-full">
-//                       <FaRegComments className="text-xl" />
-//                     </button>
-//                   </Link>
-//                 </div>
-//                 <button className="bg-[#BEF264] text-[#1F253D] font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-[#A0C1B8] mt-4 sm:mt-0">
-//                   Contact
-//                 </button>
-//               </div>
-//               <li className="text-[#BEF264] pt-96"><strong>Available Room Plans:</strong></li>
-//               <div className="bg-[#4c525e5b] p-2 rounded-lg">
-//                 <ul className="list-none space-y-2 text-sm lg:text-base">
-//                   {property.availablePlans?.map((plan, index) => (
-//                     <li key={index} className="text-white">
-//                       <span className='text-[#BEF264] pr-2'>•</span> {plan}
-//                     </li>
-//                   ))}
-//                 </ul>
-//               </div>
-//             </ul>
-//           </div>
-//         </div>
-
-//         <div className="mt-8 w-full max-w-6xl">
-//           <div className="bg-[#4c525e5b] p-4 rounded-lg shadow-md">
-//             <h3 className="text-xl text-[#ffffff]  font-bold mb-11">Facilities</h3>
-//             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-//               {property.facilities?.map((facility, index) => (
-//                 <div key={index} className="flex items-center text-white">
-//                   <span className='text-[#BEF264] pr-3'>•</span> {facility}
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="mt-8 w-full max-w-6xl">
-//           <div className="bg-[#4c525e5b] p-4 rounded-lg shadow-md">
-//             <h3 className="text-xl text-[#ffffff]  font-bold mb-11">Policies</h3>
-//             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-//               {property.policies?.map((policy, index) => (
-//                 <div key={index} className="flex items-center text-white">
-//                   <span className='text-[#BEF264] pr-3'>•</span>{policy}
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="mt-8 w-full max-w-6xl">
-//           <div className="bg-[#4c525e5b] p-4 rounded-lg shadow-md">
-//             <h3 className="text-xl text-[#ffffff]  font-bold mb-11">Nearby Accessibility Areas</h3>
-//             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-//               {property.nearbyAccess?.map((area, index) => (
-//                 <div key={index} className="flex items-center text-white">
-//                   <span className='text-[#BEF264] pr-3'>✔️</span>{area}
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-//       </main>
-//       <footer className="w-full p-4 flex justify-center items-center bg-[#2C3554] mt-12">
-//         <p className="text-gray-200">© 2024 Brostel. All rights reserved.</p>
-//       </footer>
-
-//       {selectedImage && (
-//         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50" onClick={closeImageModal}>
-//           <img src={selectedImage} alt="Selected" className="w-3/4 h-auto object-cover rounded-lg shadow-md" />
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default PropertyDetails;
-
 
 
 
 import  { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
-import { FaHistory, FaLocationArrow, FaRegComments, FaStar, FaUserFriends } from 'react-icons/fa';
+import { FaHistory, FaLocationArrow, FaPhoneAlt, FaRegComments, FaStar } from 'react-icons/fa';
 import ChatModal from '../../components/user/ChatModal';
 import toast from 'react-hot-toast';
 import mapboxgl from 'mapbox-gl';
@@ -177,6 +17,8 @@ const PropertyDetails = () => {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [userId, setUserId] = useState(null);
+
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -196,7 +38,18 @@ const PropertyDetails = () => {
       }
     };
 
+    const fetchUserId = async () => {
+      try {
+        const response = await axiosInstance.get('/users/user-id');
+        setUserId(response.data.id);
+        console.log(response.data.id,'========')
+      } catch (error) {
+        toast.error('Failed to fetch user ID.');
+      }
+    };
+
     fetchPropertyDetails();
+    fetchUserId();
   }, [id, navigate]);
 
   useEffect(() => {
@@ -252,6 +105,15 @@ const PropertyDetails = () => {
 
   const openGoogleMaps = () => {
     window.open(`https://www.google.com/maps/search/?api=1&query=${property.longitude},${property.latitude}`, '_blank');
+  };
+
+
+  const handleChatClick = () => {
+    if (!userId) {
+      toast.error('User ID not found.');
+      return;
+    }
+    navigate('/chat', { state: { userId, vendorId: property.vendorId } });
   };
 
   if (loading) {
@@ -321,18 +183,30 @@ const PropertyDetails = () => {
               </button>
 
               <div className="mt-5 pt-6 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-                <div className="flex items-center space-x-2">
+                {/* <div className="flex items-center space-x-2">
                   <button className="p-2 bg-[#BEF264] text-[#1B213B] rounded-full" onClick={() => setIsChatOpen(true)}>
                     <FaRegComments className="text-xl" />
                   </button>
-                </div>
-                <button
-                className="bg-[#BEF264] text-[#1F253D] font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-[#A0C1B8] mt-4 sm:mt-0 text-sm flex items-center justify-center"
-              >
-                <FaUserFriends className="mr-2" />
-                CONNECT WITH OWNER
+                </div> */}
+                <button>
+                <a href={`tel:${property.ownerContact}`} className="bg-[#BEF264] text-[#1F253D] font-bold py-2 ml-3 px-16 rounded-lg shadow-md transition duration-300 hover:bg-[#A0C1B8] mt-4 sm:mt-0 text-sm flex items-center justify-center ">
+                  <FaPhoneAlt className="mr-2" />
+                  CONNECT WITH OWNER
+                </a>
               </button>
+
+              
+
+
               </div>
+              <button
+                className="w-full bg-[#fefffffd] text-[#000000f7] text-sm font-bold py-2 px-6 md:px-8 rounded-3xl shadow-md transition duration-300 hover:bg-[#517ca5] mt-4 sm:mt-0 flex items-center justify-center"
+                onClick={handleChatClick}
+              >
+                Chat with vendor
+              </button>
+
+              
               
               <li className="text-[#fed400] mt-20 pt-14 uppercase"><strong>Available Room Plans</strong></li>
               <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
@@ -376,7 +250,7 @@ const PropertyDetails = () => {
               {property.facilities?.map((facility, index) => (
                 <div key={index} className="flex items-center rounded-lg p-2 bg-[#1E2530] hover:bg-[#28c4dd] hover:shadow-lg transition duration-300 ease-in-out">
                   <FaStar className="text-[#28c4dd] pr-2" />
-                  <span className="uppercase text-[#fdfdfd] font-bold">{facility}</span>
+                  <span className="uppercase text-[#fdfdfd] text-sm font-bold">{facility}</span>
                 </div>
               ))}
             </div>
@@ -390,7 +264,7 @@ const PropertyDetails = () => {
               {property.policies?.map((policy, index) => (
                 <div key={index} className="flex items-center rounded-lg p-2 bg-[#1E2530] hover:bg-[#28c4dd] hover:shadow-lg transition duration-300 ease-in-out">
                   <FaStar className="text-[#28c4dd] pr-2" />
-                  <span className="uppercase text-[#ffffff] font-bold">{policy}</span>
+                  <span className="uppercase text-[#ffffff] text-sm font-bold">{policy}</span>
                 </div>
               ))}
             </div>
@@ -404,7 +278,7 @@ const PropertyDetails = () => {
               {property.nearbyAccess?.map((area, index) => (
                 <div key={index} className="flex items-center rounded-lg p-2 bg-[#1E2530] hover:bg-[#28c4dd] hover:shadow-lg transition duration-300 ease-in-out">
                   <FaStar className="text-[#28c4dd] pr-2" />
-                  <span className="uppercase text-[#ffffff] font-bold">{area}</span>
+                  <span className="uppercase text-[#ffffff] text-sm font-bold">{area}</span>
                 </div>
               ))}
             </div>

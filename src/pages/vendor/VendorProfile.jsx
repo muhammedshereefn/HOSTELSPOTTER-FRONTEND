@@ -4,12 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import CustomAlert from '../../components/vendor/CustomAlert';
 
-
 const VendorProfile = () => {
   const navigate = useNavigate();
   const [vendorData, setVendorData] = useState(null);
   const [alert, setAlert] = useState({ message: '', type: '', visible: false });
-
 
   useEffect(() => {
     const fetchVendorData = async () => {
@@ -41,7 +39,7 @@ const VendorProfile = () => {
         type: 'success',
         visible: true,
       });   
-        });
+    });
 
     socket.on('bookingCancelled', ({ userName, bedQuantity, hostelName }) => {
       setAlert({
@@ -49,7 +47,7 @@ const VendorProfile = () => {
         type: 'error',
         visible: true,
       });
- });
+    });
 
     return () => {
       socket.disconnect();
@@ -63,13 +61,19 @@ const VendorProfile = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <nav className="w-full p-4 flex justify-between items-center">
-      {alert.visible && (
-        <CustomAlert
-          message={alert.message}
-          type={alert.type}
-          onClose={() => setAlert({ ...alert, visible: false })}
-        />
-      )}
+        {alert.visible && (
+          <CustomAlert
+            message={alert.message}
+            type={alert.type}
+            onClose={() => setAlert({ ...alert, visible: false })}
+          />
+        )}
+        <button
+          className="py-2 px-4 bg-gray-700 text-white font-bold rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-[#BEF264]"
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </button>
       </nav>
 
       <div className="container mx-auto px-4 py-8 flex">

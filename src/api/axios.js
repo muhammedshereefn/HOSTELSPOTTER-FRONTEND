@@ -36,7 +36,6 @@ const axiosInstance = axios.create({
   withCredentials: true, 
 });
 
-console.log("OKKKKKKKKKKKKKKKKKKKK");
 
 // Request interceptor to add the access token to headers
 axiosInstance.interceptors.request.use(

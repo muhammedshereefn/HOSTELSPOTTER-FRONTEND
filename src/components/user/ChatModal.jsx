@@ -95,9 +95,9 @@ const ChatModal = ({ property, isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="absolute inset-0 bg-black bg-opacity-75 backdrop-filter backdrop-blur-lg flex items-center justify-center">
-        <div className="bg-white text-black p-4 rounded-3xl shadow-lg w-full max-w-5xl h-full max-h-[90vh] flex flex-col md:flex-row">
-          <div className="w-full md:w-1/3 border-b md:border-r border-gray-300 p-4 overflow-y-auto md:h-auto">
+      <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg flex items-center justify-center p-4">
+        <div className="bg-white text-black p-6 rounded-3xl shadow-lg w-full max-w-4xl h-auto max-h-[90vh] flex flex-col md:flex-row">
+          <div className="w-full md:w-1/3 border-b md:border-r border-gray-300 p-4 overflow-y-auto">
             <h2 className="text-lg font-semibold mb-4">{steps[currentStep].question}</h2>
             <div className="space-y-2">
               {steps[currentStep].options.map((option, index) => (
