@@ -1,6 +1,3 @@
-
-
-
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import vendorAxiosInstance from '../../api/vendor/axios';
@@ -75,8 +72,35 @@ const CreatePropertyForm = () => {
     setImageFiles([...e.target.files]);
   };
 
+  const validateForm = () => {
+    const {
+      hostelName, hostelLocation, state, district, city, ownerName, ownerEmail, ownerContact,
+      rent, deposite, target, policies, facilities, category, availablePlans, nearbyAccess,
+      roomQuantity, longitude, latitude,
+    } = formData;
+
+    if (!hostelName || !hostelLocation || !state || !district || !city || !ownerName || !ownerEmail ||
+      !ownerContact || !rent || !deposite || !target || !policies || !facilities || !category ||
+      !availablePlans || !nearbyAccess || !roomQuantity || !longitude || !latitude) {
+      toast.error('All fields are required');
+      return false;
+    }
+
+    if (!imageFiles.length) {
+      toast.error('Please upload at least one image');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
     try {
       const imageUrls = await uploadImages(imageFiles);
@@ -217,46 +241,43 @@ const CreatePropertyForm = () => {
               />
             </div>
             <div>
-              <label className="block text-white mb-1">Deposite (INR)</label>
+              <label className="block text-white mb-1">Deposit (INR)</label>
               <input
                 type="number"
                 name="deposite"
                 value={formData.deposite}
                 onChange={handleChange}
-                placeholder="Enter deposite"
+                placeholder="Enter deposit"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
               <label className="block text-white mb-1">Target</label>
-              <input
-                type="text"
+              <textarea
                 name="target"
                 value={formData.target}
                 onChange={handleChange}
-                placeholder="Enter target (comma separated)"
+                placeholder="Enter target"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
               <label className="block text-white mb-1">Policies</label>
-              <input
-                type="text"
+              <textarea
                 name="policies"
                 value={formData.policies}
                 onChange={handleChange}
-                placeholder="Enter policies (comma separated)"
+                placeholder="Enter policies"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
               <label className="block text-white mb-1">Facilities</label>
-              <input
-                type="text"
+              <textarea
                 name="facilities"
                 value={formData.facilities}
                 onChange={handleChange}
-                placeholder="Enter facilities (comma separated)"
+                placeholder="Enter facilities"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
@@ -273,23 +294,21 @@ const CreatePropertyForm = () => {
             </div>
             <div>
               <label className="block text-white mb-1">Available Plans</label>
-              <input
-                type="text"
+              <textarea
                 name="availablePlans"
                 value={formData.availablePlans}
                 onChange={handleChange}
-                placeholder="Enter available plans (comma separated)"
+                placeholder="Enter available plans"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
               <label className="block text-white mb-1">Nearby Access</label>
-              <input
-                type="text"
+              <textarea
                 name="nearbyAccess"
                 value={formData.nearbyAccess}
                 onChange={handleChange}
-                placeholder="Enter nearby access (comma separated)"
+                placeholder="Enter nearby access"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
@@ -304,59 +323,48 @@ const CreatePropertyForm = () => {
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
-            {roomBedQuantities.map((bedQuantity, index) => (
-              <div key={index} className="mb-4">
-                <label className="block text-white mb-1">
-                  Room Name {index + 1}
-                </label>
+            {roomBedQuantities.map((room, index) => (
+              <div key={index} className="mb-2">
+                <label className="block text-white mb-1">Room {index + 1}</label>
                 <input
                   type="text"
-                  name={`roomName${index}`}
-                  value={bedQuantity.roomName}
-                  onChange={(e) =>
-                    handleBedQuantityChange(index, e.target.value, 'roomName')
-                  }
-                  placeholder="Enter room name"
-                  className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
+                  value={room.roomName}
+                  onChange={(e) => handleBedQuantityChange(index, e.target.value, 'roomName')}
+                  placeholder={`Enter room name`}
+                  className="w-full py-2 px-3 mb-2 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
                 />
-                <label className="block text-white mb-1">
-                  Bed Quantity {index + 1}
-                </label>
                 <input
                   type="number"
-                  name={`bedQuantity${index}`}
-                  value={bedQuantity.bedQuantity}
-                  onChange={(e) =>
-                    handleBedQuantityChange(index, e.target.value, 'bedQuantity')
-                  }
-                  placeholder="Enter bed quantity"
+                  value={room.bedQuantity}
+                  onChange={(e) => handleBedQuantityChange(index, e.target.value, 'bedQuantity')}
+                  placeholder={`Enter bed quantity for room ${index + 1}`}
                   className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
                 />
               </div>
             ))}
             <div>
-            <div>
-              <label className="block text-white mb-1">Latitude</label>
+              <label className="block text-white mb-1">Longitude</label>
               <input
                 type="text"
                 name="longitude"
                 value={formData.longitude}
                 onChange={handleChange}
-                placeholder="Enter Latitude"
+                placeholder="Enter longitude"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
-              <label className="block text-white mb-1">Longitude</label>
+              <label className="block text-white mb-1">Latitude</label>
               <input
                 type="text"
                 name="latitude"
                 value={formData.latitude}
                 onChange={handleChange}
-                placeholder="Enter Longitude"
+                placeholder="Enter latitude"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
+            <div>
               <label className="block text-white mb-1">Hostel Images</label>
               <input
                 type="file"
@@ -365,12 +373,12 @@ const CreatePropertyForm = () => {
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center">
               <button
                 type="submit"
-                className="py-2 px-4 bg-[#F2AA4CFF] text-white font-semibold rounded hover:bg-[#cf8f35] shadow-lg"
+                className="px-6 py-2 text-white bg-[#F2AA4CFF] rounded-lg shadow-md hover:bg-[#F2AA4CFF] focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF]"
               >
-                Submit
+                Create Property
               </button>
             </div>
           </form>
@@ -379,5 +387,4 @@ const CreatePropertyForm = () => {
     </div>
   );
 };
-
 export default CreatePropertyForm;

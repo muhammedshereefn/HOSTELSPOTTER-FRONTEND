@@ -206,14 +206,22 @@ const VendorHome = () => {
             >
               Chats
             </button> */}
+
             <button
-              className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800"
+              className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800 uppercase"
+              onClick={handleChatClick}
+            >
+              CHAT
+            </button>
+
+            <button
+              className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800 uppercase"
               onClick={() => navigate('/vendor/propertiesList')}
             >
               Properties
             </button>
             <button
-              className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800 relative"
+              className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800 relative uppercase"
               onClick={() => navigate('/vendor/profile')}
             >
               Profile
