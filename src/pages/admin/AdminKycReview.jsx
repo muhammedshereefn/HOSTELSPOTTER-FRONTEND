@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import vendorAxiosInstance from '../../api/vendor/axios';
 
 const AdminKycReview = () => {
@@ -9,7 +8,7 @@ const AdminKycReview = () => {
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const response = await axios.get('/api/vendor/all');
+        const response = await vendorAxiosInstance.get('/api/vendor/all');
         setVendors(response.data);
       } catch (error) {
         setMessage('Failed to fetch vendors. Please try again.');
