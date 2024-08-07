@@ -19,7 +19,7 @@ const VendorProperties = () => {
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/admin/${vendorId}/properties`);
+        const response = await axios.get(`https://watch-vogue.shop/api/admin/${vendorId}/properties`);
         setProperties(response.data);
       } catch (error) {
         console.error('Error fetching properties:', error);
@@ -36,7 +36,7 @@ const VendorProperties = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:5000/api/vendors/property/${id}`);
+      const response = await axios.delete(`https://watch-vogue.shop/api/vendors/property/${id}`);
       if (response.status === 200) {
         setProperties(properties.filter((property) => property._id !== id));
       } else {

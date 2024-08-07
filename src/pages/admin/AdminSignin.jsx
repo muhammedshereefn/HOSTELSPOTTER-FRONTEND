@@ -27,7 +27,7 @@ const AdminSignin = () => {
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/admin/signin', {
+      const response = await axios.post('https://watch-vogue.shop/api/admin/signin', {
         email: values.email,
         password: values.password
       });
