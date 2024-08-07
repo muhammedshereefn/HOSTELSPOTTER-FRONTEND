@@ -16,10 +16,10 @@ const LandingPage = () => {
       gyroControls: false,
       minHeight: 200.00,
       minWidth: 200.00,
-      baseColor: 0x0d0d0d, // very dark background
-      backgroundColor: 0x1a1a1a, // dark color
-      amplitudeFactor: 2.00, // customize as needed
-      size: 2.50, // customize as needed
+      baseColor: 0x0d0d0d, 
+      backgroundColor: 0x1a1a1a, 
+      amplitudeFactor: 2.00, 
+      size: 2.50, 
     });
 
     return () => {

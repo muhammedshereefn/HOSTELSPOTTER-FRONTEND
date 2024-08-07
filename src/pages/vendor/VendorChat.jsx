@@ -8,7 +8,7 @@ import { FaUser } from 'react-icons/fa';
 import dayjs from 'dayjs'; import Picker from 'emoji-picker-react';
 
 
-const socket = io('http://localhost:5000');
+const socket = io('https://watch-vogue.shop');
 
 const VendorChatPage = () => {
   const location = useLocation();
@@ -29,7 +29,7 @@ const VendorChatPage = () => {
 
     const fetchChats = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/chats/fetch-vendor-chats/${vendorId}`);
+        const response = await fetch(`https://watch-vogue.shop/api/chats/fetch-vendor-chats/${vendorId}`);
         const data = await response.json();
         setChats(data);
       } catch (error) {
@@ -86,7 +86,7 @@ const VendorChatPage = () => {
 
     try {
       const sentMessage = { userId: selectedUser, vendorId, text: message, senderId: vendorId };
-      await fetch('http://localhost:5000/api/chats/send-message', {
+      await fetch('https://watch-vogue.shop/api/chats/send-message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
