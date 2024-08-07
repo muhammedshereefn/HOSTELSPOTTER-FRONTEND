@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import vendorAxiosInstance from '../../api/vendor/axios';
 
 const AdminKycReview = () => {
   const [vendors, setVendors] = useState([]);
@@ -19,7 +20,7 @@ const AdminKycReview = () => {
 
   const handleKycStatusChange = async (vendorId, status) => {
     try {
-      await axios.post('/api/vendor/kyc/status', { vendorId, kycStatus: status });
+      await vendorAxiosInstance.post('/api/vendor/kyc/status', { vendorId, kycStatus: status });
       setMessage(`KYC status updated to ${status}`);
       setVendors((prevVendors) =>
         prevVendors.map((vendor) =>
