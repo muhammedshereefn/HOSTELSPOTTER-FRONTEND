@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import vendorAxiosInstance from '../../api/vendor/axios';
+import axios from 'axios';
 
 const AdminKycReview = () => {
   const [vendors, setVendors] = useState([]);
@@ -8,7 +8,7 @@ const AdminKycReview = () => {
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const response = await vendorAxiosInstance.get('/api/vendor/all');
+        const response = await axios.get('/api/vendor/all');
         setVendors(response.data);
       } catch (error) {
         setMessage('Failed to fetch vendors. Please try again.');
@@ -19,7 +19,7 @@ const AdminKycReview = () => {
 
   const handleKycStatusChange = async (vendorId, status) => {
     try {
-      await vendorAxiosInstance.post('/api/vendor/kyc/status', { vendorId, kycStatus: status });
+      await axios.post('/api/vendor/kyc/status', { vendorId, kycStatus: status });
       setMessage(`KYC status updated to ${status}`);
       setVendors((prevVendors) =>
         prevVendors.map((vendor) =>
