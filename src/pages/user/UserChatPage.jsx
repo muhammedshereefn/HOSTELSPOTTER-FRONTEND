@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 import Picker from 'emoji-picker-react';
 
 
-const socket = io('https://watch-vogue.shop'); 
+const socket = io('http://localhost:5000'); 
 
 const UserChatPage = () => {
   const location = useLocation();
@@ -29,7 +29,7 @@ const UserChatPage = () => {
 
     const fetchChats = async () => {
       try {
-        const response = await axios.get(`https://watch-vogue.shop/api/chats/fetch-chats/${userId}/${vendorId}`);
+        const response = await axios.get(`http://localhost:5000/api/chats/fetch-chats/${userId}/${vendorId}`);
         setChats(response.data || { messages: [] });
       } catch (error) {
         console.error('Failed to fetch chats', error);
@@ -65,7 +65,7 @@ const UserChatPage = () => {
 
     try {
       const sentMessage = { userId, vendorId, text: message, senderId: userId }; 
-      await axios.post('https://watch-vogue.shop/api/chats/send-message', sentMessage);
+      await axios.post('http://localhost:5000/api/chats/send-message', sentMessage);
       socket.emit('send-message', sentMessage);
       setMessage('');
     } catch (error) {

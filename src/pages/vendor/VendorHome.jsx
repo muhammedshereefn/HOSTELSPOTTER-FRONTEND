@@ -5,17 +5,19 @@ import  { Toaster } from 'react-hot-toast';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { io } from 'socket.io-client';
+import PerformanceModal from '../../components/vendor/PerformanceModal ';
 
 import premiumIcon from '/vendor/pngwing.com (3).png'; 
 import CustomAlert from '../../components/vendor/CustomAlert';
-
+import { FaChartLine, FaEnvelope, FaHome, FaPlus, FaUser } from 'react-icons/fa';
+ 
 const VendorHome = () => {
   const navigate = useNavigate();
   const [kycStatus, setKycStatus] = useState(null);
   const [getPremium, setGetPremium] = useState(false); 
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [alert, setAlert] = useState({ message: '', type: '', visible: false });
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const checkVendorStatus = async () => {
@@ -159,31 +161,34 @@ const VendorHome = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8 text-white">
           <button
-              className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300"
-              onClick={handleChatClick}
-            >
-              Chat's
-            </button>
+            className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 flex items-center space-x-2 hover:bg-black hover:text-white transition duration-300"
+            onClick={handleChatClick}
+          >
+            <FaEnvelope className="text-lg" /> {/* Add the message icon */}
+            <span>Chat's</span>
+          </button>
 
             <button
-              className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300"
-              onClick={() => navigate('/vendor/propertiesList')}
-            >
-              Properties
-            </button>
-            <button
-              className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 hover:bg-black hover:text-white transition duration-300 relative"
-              onClick={() => navigate('/vendor/profile')}
-            >
-              Profile
-              {getPremium && (
-                <img
-                  src={premiumIcon}
-                  alt="Premium Vendor"
-                  className="h-5 w-5 absolute top-0 right-0 -mt-2 -mr-2"
-                />
-              )}
-            </button>
+            className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 flex items-center space-x-2 hover:bg-black hover:text-white transition duration-300"
+            onClick={() => navigate('/vendor/propertiesList')}
+          >
+            <FaHome className="text-lg" /> 
+            <span>Properties</span>
+          </button>
+          <button
+            className="border border-[#F2AA4CFF] text-white text-sm rounded-full px-4 py-2 flex items-center space-x-2 hover:bg-black hover:text-white transition duration-300 relative"
+            onClick={() => navigate('/vendor/profile')}
+          >
+            <FaUser className="text-md" /> 
+            <span>Profile</span>
+            {getPremium && (
+              <img
+                src={premiumIcon}
+                alt="Premium Vendor"
+                className="h-5 w-5 absolute top-0 right-0 -mt-2 -mr-2"
+              />
+            )}
+          </button>
 
             {!getPremium && (
               <button
@@ -200,12 +205,7 @@ const VendorHome = () => {
         {/* Mobile Menu */}
         {isMobileNavOpen && (
           <div className="md:hidden bg-gray-900">
-            {/* <button
-              className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800"
-              onClick={() => navigate('/guide')}
-            >
-              Chats
-            </button> */}
+           
 
             <button
               className="block w-full text-left py-2 px-4 text-white hover:bg-gray-800 uppercase"
@@ -254,42 +254,71 @@ const VendorHome = () => {
     <h1 className="text-2xl sm:text-4xl font-bold mb-4 text-white">List Hostels and PGs. Grow your business</h1>
     <p className="text-base sm:text-lg mb-6">Discover a wide range of listings and get started by selecting your preferences below.</p>
     <button
-      className="px-4 sm:px-6 py-2 sm:py-3 bg-[#F2AA4CFF] text-black rounded-full hover:bg-yellow-600 transition duration-300"
+      className="px-3 py-2 font-bold bg-[#F2AA4CFF] text-black rounded-full hover:bg-yellow-600 transition duration-300 flex items-center"
       onClick={() => navigate('/vendor/propertyPayment')}
+      style={{
+        animation: 'scaleUpDown 2s infinite'
+      }}
     >
+      <FaPlus className="mr-2 text-lg" />
       ADD YOUR PROPERTIES
+      <style jsx>{`
+        @keyframes scaleUpDown {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.05);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+      `}</style>
     </button>
-  </div>
-  <div className="hidden md:flex w-full md:w-1/2 relative z-10">
-  <img
-  src="/vendor/Designer (3).png"
-  alt="Hostel"
-  className="object-cover w-full h-full rounded-e-3xl shadow-md"
-  style={{ boxShadow: '0 0 20px 10px rgba(255, 255, 255, 0.5)' }}
-/>
+    <button
+      className=" px-4 sm:px-6 py-2 sm:py-1 bg-white text-black rounded-full hover:bg-gray-400 transition duration-300 mt-4 text-sm font-bold flex items-center"
+      onClick={() => setIsModalOpen(true)}
+    >
+      <FaChartLine className="mr-2 text-lg text-blue-900" /> 
+      VIEW PERFORMANCE
+        </button>
+      </div>
+      <div className="hidden md:flex w-full md:w-1/2 relative z-10">
+      <img
+      src="/vendor/Designer (3).png"
+      alt="Hostel"
+      className="object-cover w-full h-full rounded-e-3xl shadow-md"
+      style={{ boxShadow: '0 0 20px 10px rgba(255, 255, 255, 0.5)' }}
+    />
 
-  </div>
-</div>
-
-          {/* Mobile Image */}
-          <div className="md:hidden flex justify-center items-center p-4 sm:p-8">
-          <img
-  src="/vendor/Designer.png"
-  alt="Hostel"
-  className="object-cover w-full h-full rounded-e-3xl shadow-md"
-  style={{ boxShadow: '0 0 20px 10px rgba(255, 255, 255, 0.5)' }}
-/>
-
-          </div>
-        </div>
-      ) : (
-        <div className="flex-1 flex flex-col items-center justify-center text-center p-4 sm:p-8">
-          <h2 className="text-xl sm:text-2xl font-medium mb-4 text-yellow-400">KYC Document Under Review</h2>
-          <p>Your KYC document is being reviewed by the admin. You can list your property once it is approved.</p>
-        </div>
-      )}
+      </div>
     </div>
-  );
-};
+
+              {/* Mobile Image */}
+              <div className="md:hidden flex justify-center items-center p-4 sm:p-8">
+              <img
+      src="/vendor/Designer.png"
+      alt="Hostel"
+      className="object-cover w-full h-full rounded-e-3xl shadow-md"
+      style={{ boxShadow: '0 0 20px 10px rgba(255, 255, 255, 0.5)' }}
+    />
+
+              </div>
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-4 sm:p-8">
+              <h2 className="text-xl sm:text-2xl font-medium mb-4 text-yellow-400">KYC Document Under Review</h2>
+              <p>Your KYC document is being reviewed by the admin. You can list your property once it is approved.</p>
+            </div>
+          )}
+
+            < PerformanceModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        </div>
+      );
+    };
 
 export default VendorHome;

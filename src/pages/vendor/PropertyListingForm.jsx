@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import vendorAxiosInstance from '../../api/vendor/axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { uploadImages } from '../../api/cloudinaryConfig';
 import Spinner from '../../components/vendor/Spinner';
+import FacilityModall from '../../components/vendor/FacilityModal'
+import PoliciesModal from '../../components/vendor/PoliciesModal';
+import TutorialModal from '../../components/vendor/TutorialModal';
 
 const CreatePropertyForm = () => {
   const navigate = useNavigate();
@@ -13,17 +17,14 @@ const CreatePropertyForm = () => {
     state: '',
     district: '',
     city: '',  
-    ownerName: '',
-    ownerEmail: '',
     ownerContact: '',
     rent: '',
     deposite: '',
-    target: '',
+    target: 'Students, Working Professionals',
     policies: '',
     facilities: '',
     category: '',
-    availablePlans: '',
-    nearbyAccess: '',
+    nearbyAccess: 'Temple, Church, Mosque, Hospital, Metro, Mall, Medical Store, GYM',
     roomQuantity: '',
     hostelImages: [],
     roomBedQuantities: [],
@@ -33,7 +34,37 @@ const CreatePropertyForm = () => {
   const [imageFiles, setImageFiles] = useState([]);
   const [roomBedQuantities, setRoomBedQuantities] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPoliciesModalOpen, setIsPoliciesModalOpen] = useState(false);
+  const [isTutorialModalOpen, setIsTutorialModalOpen] = useState(false);
+  // FACILITIES
+  const [predefinedFacilities, setPredefinedFacilities] = useState([
+    'Wi-Fi','Cleaning Staff','Study Table','CCTV','Play Ground', 'Laundry','AC', 'Cafeteria', 'Parking', 'Gym', 'Security', 'Power Backup'
+  ]);
+  const [selectedFacilities, setSelectedFacilities] = useState([]);
 
+
+  //POLICIES
+  const [predefinedPolicies, setPredefinedPolicies] = useState([
+    'Gate Close Time : 10', 'Visitors allowed', 'Fulltime warden', 'Notice period', 'No Drinking'
+  ]); 
+  const [selectedPolicies, setSelectedPolicies] = useState([]);
+
+
+  
+  const statesOfIndia = [
+    'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 
+    'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 
+    'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 
+    'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 
+    'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'
+  ];
+
+
+  
+  const FacilityModal = FacilityModall
+
+  
   useEffect(() => {
     const token = localStorage.getItem('vendorToken');
     if (!token) {
@@ -74,14 +105,13 @@ const CreatePropertyForm = () => {
 
   const validateForm = () => {
     const {
-      hostelName, hostelLocation, state, district, city, ownerName, ownerEmail, ownerContact,
-      rent, deposite, target, policies, facilities, category, availablePlans, nearbyAccess,
+      hostelName, hostelLocation, state, district, city, ownerContact,
+      rent, deposite, target, category, nearbyAccess,
       roomQuantity, longitude, latitude,
     } = formData;
 
-    if (!hostelName || !hostelLocation || !state || !district || !city || !ownerName || !ownerEmail ||
-      !ownerContact || !rent || !deposite || !target || !policies || !facilities || !category ||
-      !availablePlans || !nearbyAccess || !roomQuantity || !longitude || !latitude) {
+    if (!hostelName || !hostelLocation || !state || !district || !city ||
+      !ownerContact || !rent || !deposite || !target || !category || !nearbyAccess || !roomQuantity || !longitude || !latitude) {
       toast.error('All fields are required');
       return false;
     }
@@ -127,6 +157,73 @@ const CreatePropertyForm = () => {
     }
   };
 
+  const openFacilityModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeFacilityModal = () => {
+    setIsModalOpen(false);
+  };
+
+
+  const openPoliciesModal = () => {
+    setIsPoliciesModalOpen(true);
+  };
+
+  const closePoliciesModal = () => {
+    setIsPoliciesModalOpen(false);
+  };
+
+  const handleSelectFacility = (facility) => {
+    const newFacilities = [...selectedFacilities, facility];
+    setSelectedFacilities(newFacilities);
+    setFormData({
+      ...formData,
+      facilities: newFacilities.join(', '),
+    });
+    closeFacilityModal();
+  };
+
+  const handleAddCustomFacility = (facility) => {
+    const newFacilities = [...selectedFacilities, facility];
+    setSelectedFacilities(newFacilities);
+    setFormData({
+      ...formData,
+      facilities: newFacilities.join(', '),
+    });
+    closeFacilityModal();
+  };
+
+  const handleSelectPolicy = (policy) => {
+    const newPolicies = [...selectedPolicies, policy];
+    setSelectedPolicies(newPolicies);
+    setFormData({
+      ...formData,
+      policies: newPolicies.join(', '),
+    });
+    closePoliciesModal();
+  };
+
+  const handleAddCustomPolicy = (policy) => {
+    const newPolicies = [...selectedPolicies, policy];
+    setSelectedPolicies(newPolicies);
+    setFormData({
+      ...formData,
+      policies: newPolicies.join(', '),
+    });
+    closePoliciesModal();
+  };
+
+
+  const openTutorialModal = () => {
+    setIsTutorialModalOpen(true);
+  };
+
+  const closeTutorialModal = () => {
+    setIsTutorialModalOpen(false);
+  }
+
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center p-4">
       <Toaster position="top-center" reverseOrder={false} />
@@ -164,14 +261,19 @@ const CreatePropertyForm = () => {
             </div>
             <div>
               <label className="block text-white mb-1">State</label>
-              <input
-                type="text"
+              <select
                 name="state"
                 value={formData.state}
                 onChange={handleChange}
-                placeholder="Enter state"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
-              />
+              >
+                <option value="">Select state</option>
+                {statesOfIndia.map((state, index) => (
+                  <option key={index} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-white mb-1">District</label>
@@ -196,68 +298,48 @@ const CreatePropertyForm = () => {
               />
             </div>
 
+
+
             <div>
-              <label className="block text-white mb-1">Owner Name</label>
-              <input
-                type="text"
-                name="ownerName"
-                value={formData.ownerName}
-                onChange={handleChange}
-                placeholder="Enter owner name"
-                className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
-              />
-            </div>
-            <div>
-              <label className="block text-white mb-1">Owner Email</label>
-              <input
-                type="email"
-                name="ownerEmail"
-                value={formData.ownerEmail}
-                onChange={handleChange}
-                placeholder="Enter owner email"
-                className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
-              />
-            </div>
-            <div>
-              <label className="block text-white mb-1">Owner Contact</label>
+              <label className="block text-white mb-1">Contact person mobile</label>
               <input
                 type="text"
                 name="ownerContact"
                 value={formData.ownerContact}
                 onChange={handleChange}
-                placeholder="Enter owner contact"
+                placeholder="+91 xxxxxxxxxx"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
-              <label className="block text-white mb-1">Rent (INR)</label>
+              <label className="block text-white mb-1">Rent per month(INR)</label>
               <input
-                type="number"
+                type="text"
                 name="rent"
                 value={formData.rent}
                 onChange={handleChange}
-                placeholder="Enter rent"
+                placeholder="Enter amount"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
               <label className="block text-white mb-1">Deposit (INR)</label>
               <input
-                type="number"
+                type="text"
                 name="deposite"
                 value={formData.deposite}
                 onChange={handleChange}
-                placeholder="Enter deposit"
+                placeholder="Enter amount"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
-              <label className="block text-white mb-1">Target</label>
+              <label className="block text-white mb-1">Tenant Preferred</label>
               <textarea
                 name="target"
                 value={formData.target}
                 onChange={handleChange}
-                placeholder="Enter target"
+                placeholder="eg : students, employees"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
@@ -266,9 +348,10 @@ const CreatePropertyForm = () => {
               <textarea
                 name="policies"
                 value={formData.policies}
-                onChange={handleChange}
-                placeholder="Enter policies"
-                className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
+                onClick={openPoliciesModal}
+                readOnly
+                placeholder="Click to select or type policies"
+                className="w-full py-2 px-3 text-black rounded bg-gray-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
@@ -276,32 +359,27 @@ const CreatePropertyForm = () => {
               <textarea
                 name="facilities"
                 value={formData.facilities}
-                onChange={handleChange}
-                placeholder="Enter facilities"
-                className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
+                onClick={openFacilityModal}
+                readOnly
+                placeholder="Click to select or type facilities"
+                className="w-full py-2 px-3 text-black rounded bg-gray-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
               <label className="block text-white mb-1">Category</label>
-              <input
-                type="text"
-                name="category"
-                value={formData.category}
-                onChange={handleChange}
-                placeholder="Enter category"
-                className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
-              />
+              <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
+            >
+              <option value="">Select Category</option>
+              <option value="Gents">Gents</option>
+              <option value="Ladies">Ladies</option>
+              <option value="Mixed">Mixed</option>
+            </select>
             </div>
-            <div>
-              <label className="block text-white mb-1">Available Plans</label>
-              <textarea
-                name="availablePlans"
-                value={formData.availablePlans}
-                onChange={handleChange}
-                placeholder="Enter available plans"
-                className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
-              />
-            </div>
+
             <div>
               <label className="block text-white mb-1">Nearby Access</label>
               <textarea
@@ -325,7 +403,7 @@ const CreatePropertyForm = () => {
             </div>
             {roomBedQuantities.map((room, index) => (
               <div key={index} className="mb-2">
-                <label className="block text-white mb-1">Room {index + 1}</label>
+                <label className="block text-white mb-1">Enter Room {index + 1} Name & Bed Quantity</label>
                 <input
                   type="text"
                   value={room.roomName}
@@ -364,6 +442,19 @@ const CreatePropertyForm = () => {
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
+            <button
+            type="button" 
+            className="px-6 py-1 bg-gray-600 text-sm underline text-blue-400 font-bold rounded-lg shadow-md transform transition-transform duration-300 ease-in-out hover:scale-105 hover: focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF]"
+            onClick={openTutorialModal}
+          >
+            Click to View How to Get Latitude & Longitude
+          </button>
+
+
+        <TutorialModal
+        isOpen={isTutorialModalOpen}
+        onClose={closeTutorialModal}
+      />
             <div>
               <label className="block text-white mb-1">Hostel Images</label>
               <input
@@ -376,7 +467,7 @@ const CreatePropertyForm = () => {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="px-6 py-2 text-white bg-[#F2AA4CFF] rounded-lg shadow-md hover:bg-[#F2AA4CFF] focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF]"
+                className="px-6 font-bold uppercase text-black py-2  w-full bg-[#F2AA4CFF] rounded-lg shadow-md hover:bg-[#F2AA4CFF] focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF]"
               >
                 Create Property
               </button>
@@ -384,6 +475,21 @@ const CreatePropertyForm = () => {
           </form>
         )}
       </div>
+      <FacilityModal
+        isOpen={isModalOpen}
+        onClose={closeFacilityModal}
+        facilities={predefinedFacilities}
+        onSelectFacility={handleSelectFacility}
+        onAddCustomFacility={handleAddCustomFacility}
+      />
+
+      <PoliciesModal
+        isOpen={isPoliciesModalOpen}
+        onClose={closePoliciesModal}
+        policies={predefinedPolicies}
+        onSelectPolicy={handleSelectPolicy}
+        onAddCustomPolicy={handleAddCustomPolicy}
+      />
     </div>
   );
 };

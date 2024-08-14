@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 
-const API_URL = "https://watch-vogue.shop/api/users";
+const API_URL = "http://localhost:5000/api/users";
 
 export const signUp = createAsyncThunk(
     'user/signUp',

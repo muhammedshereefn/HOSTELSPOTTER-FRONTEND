@@ -38,6 +38,7 @@ import PropertiesByState from './pages/user/PropertiesByState';
 import PaymentsPage from './pages/admin/PaymentsPage';
 import NotFound from './pages/NotFound';
 import UserChatPage from './pages/user/UserChatPage';
+import VendorAllBookings from './pages/vendor/VendorAllBookings';
 
 
 
@@ -77,6 +78,7 @@ const App = () => {
         <Route path='/vendor/propertyPayment' element={<PayBeforePropertyCreation/>}/>
         <Route path='/property/:hostelName/bookings' element={<BookingList />} />
         <Route path="/vendor/profile" element={<VendorProfile />} />
+        <Route path="/vendor/allBookings" element={<VendorAllBookings />} />
 
 
 

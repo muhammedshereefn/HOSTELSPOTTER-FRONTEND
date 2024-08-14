@@ -1,14 +1,13 @@
-
-
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
 import { toast } from 'react-toastify';
 import { FaUser } from 'react-icons/fa';
-import dayjs from 'dayjs'; import Picker from 'emoji-picker-react';
+import dayjs from 'dayjs';
+ import Picker from 'emoji-picker-react';
 
 
-const socket = io('https://watch-vogue.shop');
+const socket = io('http://localhost:5000');
 
 const VendorChatPage = () => {
   const location = useLocation();
@@ -29,7 +28,7 @@ const VendorChatPage = () => {
 
     const fetchChats = async () => {
       try {
-        const response = await fetch(`https://watch-vogue.shop/api/chats/fetch-vendor-chats/${vendorId}`);
+        const response = await fetch(`http://localhost:5000/api/chats/fetch-vendor-chats/${vendorId}`);
         const data = await response.json();
         setChats(data);
       } catch (error) {
@@ -41,23 +40,29 @@ const VendorChatPage = () => {
     socket.emit('join-chat', { vendorId ,userId:selectedUser});
 
     socket.on('message', (msg) => {
-      setChats((prevChats) => {
-        const chatIndex = prevChats.findIndex(chat => chat.userId === msg.senderId);
-        if (chatIndex >= 0) {
-          const updatedChats = [...prevChats];
-          updatedChats[chatIndex].messages.push(msg);
-          return updatedChats;
-        } else {
-          return [
-            ...prevChats,
-            {
-              userId: msg.senderId,
-              userName: msg.userName,
-              messages: [msg]
-            }
-          ];
-        }
-      });
+      if(msg.senderId !== vendorId) {
+
+        setChats((prevChats) => {
+          const chatIndex = prevChats.findIndex(chat => chat.userId === msg.senderId);
+          if (chatIndex >= 0) {
+            const updatedChats = [...prevChats];
+            updatedChats[chatIndex].messages.push(msg);
+            const [updatedChat] = updatedChats.splice(chatIndex, 1);
+            updatedChats.unshift(updatedChat);
+            return updatedChats;
+          } else {
+            return [
+              
+              {
+                userId: msg.senderId,
+                userName: msg.userName,
+                messages: [msg]
+              },
+              ...prevChats,
+            ];
+          }
+        });
+      } 
 
       if (selectedUser === msg.senderId) {
         setMessages((prevMessages) => [...prevMessages, msg]);
@@ -79,6 +84,18 @@ const VendorChatPage = () => {
     const userChat = chats.find((chat) => chat.userId === userId);
     setSelectedUser(userId);
     setMessages(userChat ? userChat.messages : []);
+
+
+    setChats((prevChats) => {
+      const selectedChatIndex = prevChats.findIndex((chat) => chat.userId === userId);
+      if (selectedChatIndex >= 0) {
+        const updatedChats = [...prevChats];
+        const [selectedChat] = updatedChats.splice(selectedChatIndex, 1);
+        updatedChats.unshift(selectedChat);
+        return updatedChats;
+      }
+      return prevChats;
+    });
   };
 
   const handleSendMessage = async () => {
@@ -86,7 +103,7 @@ const VendorChatPage = () => {
 
     try {
       const sentMessage = { userId: selectedUser, vendorId, text: message, senderId: vendorId };
-      await fetch('https://watch-vogue.shop/api/chats/send-message', {
+      await fetch('http://localhost:5000/api/chats/send-message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +126,7 @@ const VendorChatPage = () => {
       handleSendMessage();
     }
   };
-
+ 
   const onEmojiClick = ( emojiObject) => {
     
     
@@ -135,19 +152,29 @@ const VendorChatPage = () => {
     <div className="flex h-screen bg-[#101820FF] text-white">
       <div className="w-1/3 bg-[#101820FF] p-4 border-r border-gray-300">
         <h2 className="text-xl font-semibold mb-4">USERS</h2>
-        <div className="space-y-2">
-          {chats.map((chat, index) => (
-            <div
-              key={index}
-              className="p-2 bg-gray-800 rounded-md shadow cursor-pointer hover:bg-gray-700"
-              onClick={() => handleSelectUser(chat.userId)}
-            >
-              <p className="text-sm text-white flex items-center">
-                <FaUser className="mr-2" />
-                {chat.userName}
-              </p>
-            </div>
-          ))}
+        <div className="space-y-4">
+          {chats.map((chat, index) => {
+            const lastMessage = chat.messages[chat.messages.length - 1];
+            const lastMessageTime = lastMessage ? dayjs(lastMessage.timestamp).format('h:mm A') : '';
+            const lastMessageText = lastMessage ? lastMessage.text : 'No messages yet';
+
+            return (
+              <div
+                key={index}
+                className="p-4 bg-gradient-to-r from-gray-700 via-gray-800 to-gray-700 rounded-lg shadow cursor-pointer hover:bg-gradient-to-r hover:from-gray-600 hover:via-gray-700 hover:to-gray-600 transition-colors duration-300"
+                onClick={() => handleSelectUser(chat.userId)}
+              >
+                <div className="flex items-center mb-2">
+                  <div className="flex items-center justify-center w-8 h-8 mr-3 rounded-full bg-gray-900 border-2 border-gray-600">
+                    <FaUser className="text-white" />
+                  </div>
+                  <p className="text-lg font-medium">{chat.userName}</p>
+                </div>
+                <p className="text-sm text-gray-400 italic truncate">{lastMessageText}</p>
+                <p className="text-xs text-gray-500 text-right">{lastMessageTime}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
 

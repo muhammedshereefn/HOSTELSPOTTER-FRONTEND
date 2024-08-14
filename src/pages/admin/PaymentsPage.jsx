@@ -12,7 +12,7 @@ const PaymentsPage = () => {
   useEffect(() => {
     const fetchRevenues = async () => {
       try {
-        const response = await axios.get('https://watch-vogue.shop/api/admin/revenues', {
+        const response = await axios.get('http://localhost:5000/api/admin/revenues', {
           params: { page: currentPage, limit }
         });
         setRevenues(response.data.revenues);

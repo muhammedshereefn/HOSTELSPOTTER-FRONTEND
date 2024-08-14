@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import vendorAxiosInstance from '../../api/vendor/axios';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import { FaEdit, FaTrash } from 'react-icons/fa';
+import { FaArrowLeft, FaEdit, FaTrash } from 'react-icons/fa';
 import Modal from 'react-modal';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -21,7 +21,7 @@ const PropertyList = () => {
   const [propertyToDelete, setPropertyToDelete] = useState(null); 
   const [alert, setAlert] = useState({ message: '', type: '', visible: false });
   const [currentPage, setCurrentPage] = useState(0);
-  const [propertiesPerPage] = useState(6); 
+  const [propertiesPerPage] = useState(3); 
 
   const navigate = useNavigate();
 
@@ -150,10 +150,11 @@ const PropertyList = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center p-4">
-      <button
-        className="mt-8 py-2 px-4 mb-3 uppercase bg-[#F2AA4CFF] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
+       <button
+        className="flex items-center mt-8 uppercase py-1 ml-2 px-3 mb-3 bg-[#F2AA4CFF] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
         onClick={() => navigate('/vendor/home')}
       >
+        <FaArrowLeft className="mr-2" /> {/* Add the icon with some margin */}
         Back to Home
       </button>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />   
@@ -165,9 +166,17 @@ const PropertyList = () => {
         />
       )}
       <div className="flex flex-col items-center justify-center w-full max-w-6xl p-8 bg-gray-800 shadow-lg rounded-3xl">
-        <h2 className="text-3xl font-semibold uppercase text-white mb-6">
-          Your <span className="text-[#F2AA4CFF]">Properties</span>
-        </h2>
+      <div className="flex items-center justify-between w-full mb-6">
+    <h2 className="text-2xl font-semibold uppercase text-white">
+      Your <span className="text-[#F2AA4CFF]">Properties</span>
+    </h2>
+    <button
+      className="py-1 px-4 bg-[#F2AA4CFF] text-black font-bold rounded focus:outline-none focus:shadow-outline transition-all duration-300 shadow-lg transform hover:scale-105"
+      onClick={() => navigate('/vendor/allBookings')}
+    >
+      Show All Bookings
+    </button>
+  </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
           {currentProperties.length === 0 ? (
             <p className="text-white">No properties found.</p>
@@ -271,8 +280,6 @@ const PropertyList = () => {
           <p><strong>State:</strong> {selectedProperty.state}</p>
           <p><strong>District:</strong> {selectedProperty.district}</p>
           <p><strong>City:</strong> {selectedProperty.city}</p>
-          <p><strong>Owner:</strong> {selectedProperty.ownerName}</p>
-          <p><strong>Email:</strong> {selectedProperty.ownerEmail}</p>
           <p><strong>Contact:</strong> {selectedProperty.ownerContact}</p>
         </div>
   
@@ -289,7 +296,6 @@ const PropertyList = () => {
         <p><strong>Policies:</strong> {selectedProperty.policies.join(', ')}</p>
         <p><strong>Facilities:</strong> {selectedProperty.facilities.join(', ')}</p>
         <p><strong>Category:</strong> {selectedProperty.category}</p>
-        <p><strong>Available Plans:</strong> {selectedProperty.availablePlans.join(', ')}</p>
         <p><strong>Nearby Access:</strong> {selectedProperty.nearbyAccess.join(', ')}</p>
         <p><strong>Room Quantity:</strong> {selectedProperty.roomQuantity}</p>
       </div>

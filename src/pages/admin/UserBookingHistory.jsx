@@ -19,7 +19,7 @@ const UserBookingHistory = () => {
   useEffect(() => {
     const fetchBookingHistory = async () => {
       try {
-        const response = await axios.get(`https://watch-vogue.shop/api/users/user/${userId}/booking-history`);
+        const response = await axios.get(`http://localhost:5000/api/users/user/${userId}/booking-history`);
         setBookingHistory(response.data);
       } catch (error) {
         console.error('Error fetching booking history:', error);

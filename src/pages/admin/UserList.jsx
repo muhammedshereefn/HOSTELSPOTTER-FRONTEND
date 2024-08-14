@@ -24,7 +24,7 @@ const UsersList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('https://watch-vogue.shop/api/users/all');
+        const response = await axios.get('http://localhost:5000/api/users/all');
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -45,7 +45,7 @@ const UsersList = () => {
 
   const handleBlockUser = async (userId) => {
     try {
-      await axios.put(`https://watch-vogue.shop/api/admin/blockUser/${userId}`);
+      await axios.put(`http://localhost:5000/api/admin/blockUser/${userId}`);
       setUsers(users.map(user => user._id === userId ? { ...user, isBlocked: true } : user));
     } catch (error) {
       console.error('Error blocking user:', error);
@@ -54,7 +54,7 @@ const UsersList = () => {
 
   const handleUnblockUser = async (userId) => {
     try {
-      await axios.put(`https://watch-vogue.shop/api/admin/unblockUser/${userId}`);
+      await axios.put(`http://localhost:5000/api/admin/unblockUser/${userId}`);
       setUsers(users.map(user => user._id === userId ? { ...user, isBlocked: false } : user));
     } catch (error) {
       console.error('Error unblocking user:', error);
@@ -65,7 +65,7 @@ const UsersList = () => {
     const confirmDelete = window.confirm('Are you sure you want to delete this user?');
     if (confirmDelete) {
       try {
-        await axios.delete(`https://watch-vogue.shop/api/admin/deleteUser/${userId}`);
+        await axios.delete(`http://localhost:5000/api/admin/deleteUser/${userId}`);
         setUsers(users.filter(user => user._id !== userId));
       } catch (error) {
         console.log('Error deleting user:', error);

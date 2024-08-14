@@ -25,7 +25,7 @@ const VendorsList = () => {
   useEffect(() => {
     const fetchVendors = async () => {
       try {
-        const response = await axios.get('https://watch-vogue.shop/api/vendors/all');
+        const response = await axios.get('http://localhost:5000/api/vendors/all');
         setVendors(response.data);
       } catch (error) {
         console.error('Error fetching vendors:', error);
@@ -46,7 +46,7 @@ const VendorsList = () => {
 
   const handleBlockVendor = async (vendorId) => {
     try {
-      await axios.put(`https://watch-vogue.shop/api/admin/blockVendor/${vendorId}`);
+      await axios.put(`http://localhost:5000/api/admin/blockVendor/${vendorId}`);
       setVendors(vendors.map(vendor => vendor._id === vendorId ? { ...vendor, isBlocked: true } : vendor));
     } catch (error) {
       console.error('Error blocking vendor:', error);
@@ -55,7 +55,7 @@ const VendorsList = () => {
 
   const handleUnblockVendor = async (vendorId) => {
     try {
-      await axios.put(`https://watch-vogue.shop/api/admin/unblockVendor/${vendorId}`);
+      await axios.put(`http://localhost:5000/api/admin/unblockVendor/${vendorId}`);
       setVendors(vendors.map(vendor => vendor._id === vendorId ? { ...vendor, isBlocked: false } : vendor));
     } catch (error) {
       console.error('Error unblocking vendor:', error);

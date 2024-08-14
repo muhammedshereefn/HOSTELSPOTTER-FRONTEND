@@ -24,6 +24,8 @@ const BookingList = () => {
             Authorization: `Bearer ${localStorage.getItem('vendorToken')}`,
           },
         });
+
+        console.log(response)
         if (response.status === 200) {
           setBookings(response.data);
         } else {
@@ -104,7 +106,9 @@ const BookingList = () => {
                   <th className="py-2 px-4 text-left text-white">Contact</th>
                   <th className="py-2 px-4 text-left text-white">Room Name</th>
                   <th className="py-2 px-4 text-left text-white">Bed Quantity</th>
-                  <th className="py-2 px-4 text-left text-white">Date</th>
+                  <th className="py-2 px-4 text-left text-white">Status</th>
+                  <th className="py-2 px-4 text-left text-white">Booked At</th>
+                  <th className="py-2 px-4 text-left text-white">Booking For</th>
                 </tr>
               </thead>
               <tbody>
@@ -114,7 +118,9 @@ const BookingList = () => {
                     <td className="py-2 px-4 text-white">{booking.contact}</td>
                     <td className="py-2 px-4 text-white">{booking.roomName}</td>
                     <td className="py-2 px-4 text-white">{booking.bedQuantity}</td>
+                    <td className="py-2 px-4 text-white">{booking.status}</td>
                     <td className="py-2 px-4 text-white">{format(new Date(booking.bookedAt), 'dd/MM/yyyy')}</td>
+                    <td className="py-2 px-4 text-white">{format(new Date(booking.bookingDate), 'dd/MM/yyyy')}</td>
                   </tr>
                 ))}
               </tbody>

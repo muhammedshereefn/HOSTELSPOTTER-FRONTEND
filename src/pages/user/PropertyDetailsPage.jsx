@@ -4,9 +4,12 @@
 import  { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import axiosInstance from '../../api/axios';
-import { FaHistory, FaLocationArrow, FaPhoneAlt, FaRegComments, FaStar } from 'react-icons/fa';
+import { FaHeart, FaHistory, FaLocationArrow, FaPhoneAlt,  FaRegHeart, FaStar } from 'react-icons/fa';
 import ChatModal from '../../components/user/ChatModal';
 import toast from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
+
+
 import mapboxgl from 'mapbox-gl';
 
 const PropertyDetails = () => {
@@ -18,6 +21,7 @@ const PropertyDetails = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
 
   useEffect(() => {
@@ -42,7 +46,6 @@ const PropertyDetails = () => {
       try {
         const response = await axiosInstance.get('/users/user-id');
         setUserId(response.data.id);
-        console.log(response.data.id,'========')
       } catch (error) {
         toast.error('Failed to fetch user ID.');
       }
@@ -51,6 +54,36 @@ const PropertyDetails = () => {
     fetchPropertyDetails();
     fetchUserId();
   }, [id, navigate]);
+
+
+  useEffect(() => {
+    const checkIfFavorite = async () => {
+      try {
+        const response = await axiosInstance.get(`/users/favorites/${id}`);
+        setIsFavorite(response.data.isFavorite);
+      } catch (error) {
+        console.error('Failed to check favorite status');
+      }
+    };
+
+    checkIfFavorite();
+  }, [id]);
+
+  const toggleFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await axiosInstance.delete(`/users/favorites`, { data: { propertyId: id } });
+        setIsFavorite(false);
+        toast.success('Removed from favorites');
+      } else {
+        await axiosInstance.post(`/users/favorites`, { propertyId: id, propertyName: property.name });
+        setIsFavorite(true);
+        toast.success('Added to favorites');
+      }
+    } catch (error) {
+      toast.error('Hostel alredy in your favorites list');
+    }
+  };
 
   useEffect(() => {
     if (location.state?.bookingSuccess) {
@@ -138,7 +171,7 @@ const PropertyDetails = () => {
         <div className="flex items-center space-x-4">
           <button
             onClick={() => navigate('/home')}
-            className="bg-[#BEF264] text-[#000000] py-2 px-4 rounded-lg shadow-md transition duration-300 hover:bg-[#A0C1B8]"
+            className="bg-[#BEF264] text-[#000000] py-1 px-4 rounded-lg shadow-md transition duration-300 hover:bg-[#A0C1B8]"
           >
             Back
           </button>
@@ -147,11 +180,22 @@ const PropertyDetails = () => {
               <FaHistory className="text-xl" />
             </button>
           </Link>
-        </div>
+          <button
+      onClick={toggleFavorite}
+      className="flex items-center bg-transparent border-none p-0 cursor-pointer"
+    >
+      <div className="text-3xl ">
+        {isFavorite ? <FaHeart className='text-red-300'/> : <FaRegHeart  />}
+      </div>
+    </button>
+          
+      </div>
       </header>
 
       <main className="flex flex-col items-center mt-12 text-left px-4 w-full max-w-6xl">
+      <Toaster position="top-right" reverseOrder={false} />
         <h2 className="text-3xl uppercase font-bold mb-4">{property.hostelName}</h2>
+
         <div className="w-full flex flex-col lg:flex-row gap-6">
           <div className="w-full lg:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
             {property.hostelImages?.map((image, index) => (
@@ -181,13 +225,10 @@ const PropertyDetails = () => {
                 <FaLocationArrow className="mr-2" />
                 Navigate to location
               </button>
+              
 
               <div className="mt-5 pt-6 flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-                {/* <div className="flex items-center space-x-2">
-                  <button className="p-2 bg-[#BEF264] text-[#1B213B] rounded-full" onClick={() => setIsChatOpen(true)}>
-                    <FaRegComments className="text-xl" />
-                  </button>
-                </div> */}
+                
                 <button>
                 <a href={`tel:${property.ownerContact}`} className="bg-[#BEF264] text-[#1F253D] font-bold py-2 ml-3 px-16 rounded-lg shadow-md transition duration-300 hover:bg-[#A0C1B8] mt-4 sm:mt-0 text-sm flex items-center justify-center ">
                   <FaPhoneAlt className="mr-2" />
@@ -208,33 +249,32 @@ const PropertyDetails = () => {
 
               
               
-              <li className="text-[#fed400] mt-20 pt-14 uppercase"><strong>Available Room Plans</strong></li>
+              <li className="text-[#fed400] mt-20 pt-14 uppercase"><strong>Available Rooms</strong></li>
               <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
-                <h2 className="text-xl font-bold text-white mb-4 ">Available Plans</h2>
-                <ul className="space-y-2">
-                  {property.availablePlans.map((plan, index) => (
-                    <li key={index} className="text-gray-300 border-b border-gray-600 py-2">
-                      {plan}
-                    </li>
-                  ))}
-                </ul>
+                
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold text-gray-200 mb-4">
                     <p>Book Beds in Advance</p>
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {property.roomBedQuantities.map((room, index) => (
-                      <button
-                        key={index}
-                        onClick={() => handleSlotBooking(room.roomName, room.bedQuantity)}
-                        className="text-white bg-green-500 hover:bg-green-600 px-4 py-3 rounded-lg shadow-md transition-transform transform hover:scale-105"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold">{room.bedQuantity} Beds Room</span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+  {property.roomBedQuantities.map((room, index) => (
+    <div key={index} className="flex flex-col items-center">
+      {/* Room Label */}
+      <span className="text-sm text-gray-400 mb-1">Room {index + 1}</span>
+
+      {/* Bed Button */}
+      <button
+        onClick={() => handleSlotBooking(room.roomName, room.bedQuantity)}
+        className="text-white w-full bg-green-500 hover:bg-green-600 px-4 py-3 rounded-lg shadow-md transition-transform transform hover:scale-105"
+      >
+        <div className="flex items-center justify-between">
+          <span className="font-semibold">{room.bedQuantity} Beds</span>
+        </div>
+      </button>
+    </div>
+  ))}
+</div>
+
                 </div>
               </div>
             </ul>

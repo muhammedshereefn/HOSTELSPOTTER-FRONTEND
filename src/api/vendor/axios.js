@@ -7,7 +7,7 @@ const refreshVendorAuthToken = async () => {
   const refreshToken = localStorage.getItem('vendorRefreshToken');
 
   try {
-    const response = await axios.post('https://watch-vogue.shop/api/vendors/refresh-token', { refreshToken });
+    const response = await axios.post('http://localhost:5000/api/vendors/refresh-token', { refreshToken });
     const { accessToken, refreshToken: newRefreshToken } = response.data;
 
     console.log(accessToken, 'Vendor new access token');
@@ -28,7 +28,7 @@ const refreshVendorAuthToken = async () => {
 
 // Create Axios instance
 const vendorAxiosInstance = axios.create({
-  baseURL: 'https://watch-vogue.shop/api',
+  baseURL: 'http://localhost:5000/api',
   withCredentials: true, 
 });
 
