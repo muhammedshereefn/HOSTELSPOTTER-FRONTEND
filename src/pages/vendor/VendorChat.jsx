@@ -30,6 +30,13 @@ const VendorChatPage = () => {
       try {
         const response = await fetch(`http://localhost:5000/api/chats/fetch-vendor-chats/${vendorId}`);
         const data = await response.json();
+
+        data.sort((a, b) => {
+          const lastMessageA = a.messages[a.messages.length - 1];
+          const lastMessageB = b.messages[b.messages.length - 1];
+          return new Date(lastMessageB.timestamp) - new Date(lastMessageA.timestamp);
+        });
+
         setChats(data);
       } catch (error) {
         console.error('Failed to fetch chats', error);
@@ -61,6 +68,12 @@ const VendorChatPage = () => {
               ...prevChats,
             ];
           }
+          updatedChats.sort((a, b) => {
+            const lastMessageA = a.messages[a.messages.length - 1];
+            const lastMessageB = b.messages[b.messages.length - 1];
+            return new Date(lastMessageB.timestamp) - new Date(lastMessageA.timestamp);
+          });
+          return updatedChats;
         });
       } 
 

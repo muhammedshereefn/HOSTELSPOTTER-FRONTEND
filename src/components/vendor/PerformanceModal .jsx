@@ -83,11 +83,11 @@ const PerformanceModal = ({ isOpen, onClose, vendorToken }) => {
             </div>
             <div className="bg-gray-100 rounded-lg p-4 shadow-sm flex justify-between items-center">
               <span className="text-lg font-medium text-gray-700">Top Booked Hostel</span>
-              <span className="text-2xl font-semibold text-blue-600">{topBookedHostel.name} ({topBookedHostel.count})</span>
+              <span className="text-xl font-semibold text-blue-600">{topBookedHostel.name} ({topBookedHostel.count})</span>
             </div>
             <div className="bg-gray-100 rounded-lg p-4 shadow-sm flex justify-between items-center">
               <span className="text-lg font-medium text-gray-700">Worst Booked Hostel</span>
-              <span className="text-2xl font-semibold text-red-600">{worstBookedHostel.name} ({worstBookedHostel.count})</span>
+              <span className="text-xl font-semibold text-red-600">{worstBookedHostel.name} ({worstBookedHostel.count})</span>
             </div>
           </div>
           <div className="flex justify-end mt-6">

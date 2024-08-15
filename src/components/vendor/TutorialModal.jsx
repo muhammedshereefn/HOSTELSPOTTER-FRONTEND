@@ -16,7 +16,7 @@ const TutorialModal = ({ isOpen, onClose }) => {
         <div className="aspect-w-16 aspect-h-9 mb-4">
           <iframe
             className="w-full h-full"
-            src="/public/tutorial.mp4"
+            src="/public/WhatsApp Video 2024-08-15 at 09.52.29_9807a801.mp4"
             title="Tutorial Video"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

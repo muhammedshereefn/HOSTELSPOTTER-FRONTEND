@@ -44,6 +44,12 @@ export default function BookingHistoryPage() {
   const handleCancelSlot = async (bookingId) => {
   
 
+    const isConfirmed = window.confirm("Are you sure you want to cancel this booking?");
+
+    if (!isConfirmed) {
+      return; 
+    }
+  
     try {
       await axiosInstance.delete(`/users/booking-history/${bookingId}`, {
         headers: {

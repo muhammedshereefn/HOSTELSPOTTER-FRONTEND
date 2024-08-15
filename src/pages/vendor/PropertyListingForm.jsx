@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import vendorAxiosInstance from '../../api/vendor/axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { uploadImages } from '../../api/cloudinaryConfig';
