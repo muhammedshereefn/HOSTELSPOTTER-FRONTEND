@@ -77,6 +77,7 @@ const PropertyDetails = () => {
         toast.success('Removed from favorites');
       } else {
         await axiosInstance.post(`/users/favorites`, { propertyId: id, propertyName: property.name });
+        console.log("========Ok")
         setIsFavorite(true);
         toast.success('Added to favorites');
       }
@@ -101,7 +102,6 @@ const PropertyDetails = () => {
 
   useEffect(() => {
     if (property && property.longitude && property.latitude) {
-      console.log('Initializing map with coordinates:', property.longitude, property.latitude);
       mapboxgl.accessToken = 'pk.eyJ1Ijoic2hlcmVlZnNoYXoiLCJhIjoiY2x5cXVqdzc5MGRrODJqcXZxbzEwYjFkYiJ9.I2x00Rca-_u3T24Lm-oaww';
 
       const map = new mapboxgl.Map({
