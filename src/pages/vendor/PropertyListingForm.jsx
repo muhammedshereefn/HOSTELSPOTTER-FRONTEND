@@ -420,24 +420,24 @@ const CreatePropertyForm = () => {
               </div>
             ))}
             <div>
-              <label className="block text-white mb-1">Longitude</label>
+              <label className="block text-white mb-1">Latitude</label>
               <input
                 type="text"
                 name="longitude"
                 value={formData.longitude}
                 onChange={handleChange}
-                placeholder="Enter longitude"
+                placeholder="Enter Latitude"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
             <div>
-              <label className="block text-white mb-1">Latitude</label>
+              <label className="block text-white mb-1">Longitude</label>
               <input
                 type="text"
                 name="latitude"
                 value={formData.latitude}
                 onChange={handleChange}
-                placeholder="Enter latitude"
+                placeholder="Enter Longitude"
                 className="w-full py-2 px-3 text-black rounded bg-gray-200 focus:outline-none focus:ring-2 focus:ring-[#F2AA4CFF] shadow-md"
               />
             </div>
