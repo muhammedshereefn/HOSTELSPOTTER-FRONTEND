@@ -14,9 +14,9 @@ const TutorialModal = ({ isOpen, onClose }) => {
         </button>
         <h2 className="text-2xl font-semibold mb-4">How to Get Latitude and Longitude</h2>
         <div className="aspect-w-16 aspect-h-9 mb-4">
-                    <iframe
+         <iframe
             className="w-full h-full"
-            src="https://www.youtube.com/embed/Xr_IIPu5AIs?si=CK1Oh_MxANNkjg83"
+            src="/WhatsApp Video 2024-08-15 at 09.52.29_9807a801.mp4"
             title="Tutorial Video"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
