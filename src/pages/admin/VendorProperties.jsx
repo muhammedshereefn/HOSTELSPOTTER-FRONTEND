@@ -158,7 +158,6 @@ const VendorProperties = () => {
             <p><strong>Policies:</strong> {selectedProperty.policies.join(', ')}</p>
             <p><strong>Facilities:</strong> {selectedProperty.facilities.join(', ')}</p>
             <p><strong>Category:</strong> {selectedProperty.category}</p>
-            <p><strong>Available Plans:</strong> {selectedProperty.availablePlans.join(', ')}</p>
             <p><strong>Nearby Access:</strong> {selectedProperty.nearbyAccess.join(', ')}</p>
             <p><strong>Room Quantity:</strong> {selectedProperty.roomQuantity}</p>
           </div>
