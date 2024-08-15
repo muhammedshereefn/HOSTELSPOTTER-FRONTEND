@@ -19,7 +19,7 @@ const SubscriptionLanding = () => {
           return;
         }
 
-        const response = await fetch('http://localhost:5000/api/vendors/check-block-status', {
+        const response = await fetch('https://watch-vogue.shop/api/vendors/check-block-status', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -42,7 +42,7 @@ const SubscriptionLanding = () => {
 
     checkPremiumStatus();
 
-    const socket = io('http://localhost:5000');
+    const socket = io('https://watch-vogue.shop');
 
     socket.on('newBooking', ({ userName, bedQuantity, hostelName }) => {
       setAlert({

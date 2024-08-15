@@ -9,7 +9,7 @@ const FavoritesModal = ({ showModal, closeModal, favorites, removeFavorite }) =>
   const handleRemove = async (propertyId) => {
     try {
 
-        console.log(propertyId,'-=-=-=-=-=-=-=')
+        
       await removeFavorite(propertyId);
     } catch (error) {
       console.error("Failed to remove favorite hostel", error);

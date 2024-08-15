@@ -31,7 +31,7 @@ const AdminDashboard = () => {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/admin/dashboard-counts', {
+        const response = await axios.get('https://watch-vogue.shop/api/admin/dashboard-counts', {
           headers: { Authorization: `Bearer ${adminToken}` }
         });
         setDashboardData(response.data);

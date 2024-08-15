@@ -31,7 +31,7 @@ const VendorProfile = () => {
 
     fetchVendorData();
 
-    const socket = io('http://localhost:5000');
+    const socket = io('https://watch-vogue.shop');
 
     socket.on('newBooking', ({ userName, bedQuantity, hostelName }) => {
       setAlert({

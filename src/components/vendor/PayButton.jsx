@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 const PayButton = () => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('vendorToken'); // Adjust the token key as per your requirement
+  const token = localStorage.getItem('vendorToken'); 
 
   if (!token) {
-    navigate('/vendor/signIn'); // Adjust the sign-in route as per your requirement
+    navigate('/vendor/signIn'); 
     return;
   }
 

@@ -38,7 +38,7 @@ const Signin = () => {
           // User is blocked
           toast.error('User is blocked');
         } else if (error.response.status === 401) {
-          setFieldError('email', ''); // Clear any existing errors
+          setFieldError('email', ''); 
           setFieldError('password', 'Invalid email or password');
           toast.error('Invalid email or password');
         } else {
@@ -135,7 +135,7 @@ const Signin = () => {
                     </div>
                     <div className="text-xs m-3 float-right">
                       <Link to="/forgot-password" className="text-sm text-green-500 hover:text-green-400">
-                        Forgot Password?
+                       
                       </Link>
                     </div>
                   </div>

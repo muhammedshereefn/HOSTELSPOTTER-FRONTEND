@@ -12,7 +12,7 @@ const VendorKYCApproval = () => {
   useEffect(() => {
     const fetchVendor = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/vendors/${vendorId}`);
+        const response = await axios.get(`https://watch-vogue.shop/api/vendors/${vendorId}`);
         setVendor(response.data);
       } catch (error) {
         console.error('Error fetching vendor:', error);
@@ -25,7 +25,7 @@ const VendorKYCApproval = () => {
 
   const handleApprove = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/admin/approveKYC/${vendorId}`);
+      await axios.put(`https://watch-vogue.shop/api/admin/approveKYC/${vendorId}`);
       setVendor({ ...vendor, kycStatus: 'success' });
     } catch (error) {
       console.error('Error approving KYC:', error);
@@ -53,7 +53,7 @@ const VendorKYCApproval = () => {
             </div>
             <div className="w-2/5 p-4 bg-gray-50 rounded-xl shadow-lg">
               <img
-                src={`http://localhost:5000/${vendor.kycImage}`}
+                src={`https://watch-vogue.shop/${vendor.kycImage}`}
                 alt="KYC"
                 className="w-full rounded-xl shadow-md"
               />

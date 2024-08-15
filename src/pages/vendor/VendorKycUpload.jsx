@@ -1,6 +1,3 @@
-
-
-
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import vendorAxiosInstance from '../../api/vendor/axios';
