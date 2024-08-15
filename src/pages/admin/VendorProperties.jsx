@@ -140,8 +140,6 @@ const VendorProperties = () => {
               <p><strong>State:</strong> {selectedProperty.state}</p>
               <p><strong>District:</strong> {selectedProperty.district}</p>
               <p><strong>City:</strong> {selectedProperty.city}</p>
-              <p><strong>Owner:</strong> {selectedProperty.ownerName}</p>
-              <p><strong>Email:</strong> {selectedProperty.ownerEmail}</p>
               <p><strong>Contact:</strong> {selectedProperty.ownerContact}</p>
             </div>
       
