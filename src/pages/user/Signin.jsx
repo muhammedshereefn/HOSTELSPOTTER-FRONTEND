@@ -101,7 +101,7 @@ const Signin = () => {
                         name="email"
                         type="email"
                         autoComplete="email"
-                        placeholder="abc@gmail.com"
+                        placeholder="email : test@gmail.com"
                         className="w-full placeholder:text-sm text-white bg-[#ffffff0f] border-1 border-slate-500 px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:border-blue-500"
                       />
                       <ErrorMessage
@@ -124,7 +124,7 @@ const Signin = () => {
                         name="password"
                         type="password"
                         autoComplete="current-password"
-                        placeholder="Password"
+                        placeholder="Password : 111111"
                         className="w-full placeholder:text-sm text-white bg-[#ffffff0f] border-1 border-slate-500 px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:border-blue-500"
                       />
                       <ErrorMessage
