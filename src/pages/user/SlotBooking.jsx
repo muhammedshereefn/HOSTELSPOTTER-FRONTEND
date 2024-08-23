@@ -44,6 +44,12 @@ const SlotBooking = () => {
       return;
     }
 
+    
+  if (selectedBeds.length === 0) {
+    toast.error('Please choose at least one bed before proceeding to payment.');
+    return;
+  }
+
     const amount = selectedBeds.length * 1000; 
 
     try {
